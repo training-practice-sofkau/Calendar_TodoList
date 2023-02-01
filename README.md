@@ -13,9 +13,11 @@ TOTAL 100 puntos
 * Links de referencias
 
 https://www.bacancytechnology.com/blog/web-api-in-net-6
-Data Base first https://learn.microsoft.com/es-es/ef/ef6/modeling/designer/workflows/database-first
+
+* Data Base first 
+https://learn.microsoft.com/es-es/ef/ef6/modeling/designer/workflows/database-first
 https://www.youtube.com/watch?v=3NWT9k-6xGg&ab_channel=SameerSaini
-LINQ https://www.youtube.com/watch?v=Emk0GICLXC8&ab_channel=hdeleon.net
+* LINQ 
+https://www.youtube.com/watch?v=Emk0GICLXC8&ab_channel=hdeleon.net
 https://learn.microsoft.com/es-es/aspnet/web-api/overview/data/using-web-api-with-entity-framework/part-2?source=recommendations
-Entre Pull Request por Aprendiz
-AdryanYnfante
+* Entre Pull Request por Aprendiz
