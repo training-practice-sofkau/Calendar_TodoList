@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TodoListSofka.Model;
 
-namespace TodoListSofka.Model;
+namespace TodoListSofka.Data;
 
 public partial class CalendarEventoContext : DbContext
 {
