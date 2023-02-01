@@ -22,7 +22,7 @@ namespace TodoListSofka.Controllers
         public async Task<IActionResult> GetPersonajes()
         {
             //Busca las Tareas que no hayan sido eliminados y los retorna
-            var tareaActiva = dbContext.Tareas.Where(r => r.State != false).ToList();
+            var tareaActiva = dbContext.ListaTareas1.Where(r => r.State != false).ToList();
             return Ok(tareaActiva);
 
             //Muestra todos los personajes 
@@ -34,7 +34,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var tarea = await dbContext.Tareas.Where(r => r.State != false && r.Id == id).ToListAsync();
+                var tarea = await dbContext.ListaTareas1.Where(r => r.State != false && r.Id == id).ToListAsync();
                 if (tarea == null || id == 0 || tarea.Count == 0)
                 {
                     return BadRequest(new { code = 400, message = "Id no encontrado. " });
@@ -53,7 +53,7 @@ namespace TodoListSofka.Controllers
         [HttpGet("/Prioridad")]
         public async Task<Object> GetPriority(string importancia)
         {
-            var tareaImportante = dbContext.Tareas.Where(r => r.Priority == importancia && r.State != false).ToList();
+            var tareaImportante = dbContext.ListaTareas1.Where(r => r.Priority == importancia && r.State != false).ToList();
             return tareaImportante;
         }
 
@@ -79,7 +79,7 @@ namespace TodoListSofka.Controllers
             if (itemData == null || itemData.Id == 0)
                 return BadRequest("El ID no es correcto. ");
 
-            var tarea = await dbContext.Tareas.FindAsync(itemData.Id);
+            var tarea = await dbContext.ListaTareas1.FindAsync(itemData.Id);
             if (tarea == null)
                 return NotFound("La tarea no existe. ");
             if (tarea.State == false)
@@ -105,7 +105,7 @@ namespace TodoListSofka.Controllers
         [HttpPut("/Estado/{id:int}")]
         public async Task<Object> PutEstado(int id, bool estado)
         {
-            var tarea = await dbContext.Tareas.FindAsync(id);
+            var tarea = await dbContext.ListaTareas1.FindAsync(id);
             tarea.IsCompleted = estado;
             await dbContext.SaveChangesAsync();
             return Ok();
@@ -114,10 +114,10 @@ namespace TodoListSofka.Controllers
         [HttpDelete("{id}")]
         public async Task<Object> Delete(int id)
         {
-            var tarea = await dbContext.Tareas.FindAsync(id);
+            var tarea = await dbContext.ListaTareas1.FindAsync(id);
             if (tarea.State == false) return NotFound("El personaje ya ha sido eliminado. ");
             if (tarea == null) return NotFound("ID incorrecto");
-            dbContext.Tareas.Remove(tarea);
+            dbContext.ListaTareas1.Remove(tarea);
             dbContext.SaveChanges();
             return Ok();
         }

@@ -6,7 +6,7 @@ namespace TodoListSofka.Data
 {
     public class ToDoAPIDbContext : DbContext
     {
-        public DbSet<TodoItem> Tareas { get; set; }
+        public DbSet<TodoItem> ListaTareas1 { get; set; }
 
         public ToDoAPIDbContext(DbContextOptions options) : base(options)
         {
