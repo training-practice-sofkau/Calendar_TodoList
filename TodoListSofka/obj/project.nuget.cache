@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "aBW3xwcjo5y1NZv2dAl2fEzyjYb0arykT+1ycsBvv5vBb6QMvZHnnZZvQBDP31FsAX0TFot9h8olwxXvyn3axQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\TodoListSofka.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\adryan.ynfante\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
