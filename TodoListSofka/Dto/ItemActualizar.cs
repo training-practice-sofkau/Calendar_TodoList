@@ -1,5 +1,5 @@
 ﻿
-/*using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace TodoListSofka.Dto
 {
@@ -7,12 +7,14 @@ namespace TodoListSofka.Dto
     {
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
         public string Title { get; set; } = null!;
+
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
-        public string Descripcion { get; set; } = null!;
+        public string Descripccion { get; set; } = null!;
+        
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
         public string? Responsible { get; set; }
+        
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
         public bool IsCompleted { get; set; }
     }
 }
-*/

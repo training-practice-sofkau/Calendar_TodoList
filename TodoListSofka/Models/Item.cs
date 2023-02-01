@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TodoListSofka.Models;
 
-public partial class Item: Calendar
+public partial class Item
 {
     public int Id { get; set; }
 
