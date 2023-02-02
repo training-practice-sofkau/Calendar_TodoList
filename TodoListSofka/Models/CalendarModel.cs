@@ -16,9 +16,12 @@ namespace TodoListSofka1.Models
 		public List<TareaModel> Tareas { get; set; }
 
 
-		public CalendarModel(int dia)
+		public CalendarModel(int dia, int mes, int anio, bool state)
 		{
 			Dia = dia;
+			Mes = mes;
+			Anio = anio;
+			State = state;
 		}
 
 		public CalendarModel() { }
