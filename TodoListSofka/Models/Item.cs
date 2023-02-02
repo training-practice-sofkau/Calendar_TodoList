@@ -20,4 +20,10 @@ public partial class Item
     public int? IdCalendar { get; set; }
 
     public virtual Calendar? IdCalendarNavigation { get; set; }
+
+    public override string? ToString()
+    {
+
+     return $" --Tarea: {Title} , tiene como objetivo: {Descripccion},  la persona encargada es: {Resposible}, su estado actual es: {Estate} y el día al cual fue asignado es: {IdCalendar} de febrero";
+    }
 }

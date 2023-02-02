@@ -7,5 +7,7 @@ public partial class Calendar
 {
     public int NumberDaY { get; set; }
 
-    public virtual ICollection<Item> Items { get; } = new List<Item>();
+    public  ICollection<Item> Items { get;} = new List<Item>();
+
+
 }
