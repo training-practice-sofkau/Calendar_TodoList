@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TodoListSofka.Dto;
 using TodoListSofka.Models;
 
@@ -53,7 +51,7 @@ namespace TodoListSofka.Controllers
             try
             {
                 
-                var task = from aux in _dbContext.Items where aux.IdCalendar == id select aux;
+                var task = from aux in _dbContext.Items where (aux.IdCalendar == id && aux.Estate!=0) select aux;
                 
                
                 return Ok(task);
@@ -129,9 +127,6 @@ namespace TodoListSofka.Controllers
             var day = await _dbContext.Calendars.FindAsync(dayUser);
 
 
-
-
-
             if (day == null){
 
                 var calendario = new Calendar()
@@ -174,15 +169,47 @@ namespace TodoListSofka.Controllers
         }
 
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteItem(int id)
+        {
+
+           // var item = await _dbContext.TodoItems.FindAsync(id);
+            var recordToUpdate = _dbContext.Items.FirstOrDefault(r => r.Id == id);
+
+            try
+            {
+                if (recordToUpdate != null){
+                    recordToUpdate.Estate = 0;
+                    _dbContext.SaveChanges();
+                }
+                else { return NotFound(); }
+
+                return Ok(new
+                {
+                    code = 200,
+                    message = $"La tarea con id {id} fue eliminada"
+                }
+                );
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
 
+        }
 
 
+        private bool ItemAvailable(int id)
+        {
 
+            return (_dbContext.Items?.Any(x => x.Id == id)).GetValueOrDefault();
 
-
+        }
 
     }
+
+
 
 }
 

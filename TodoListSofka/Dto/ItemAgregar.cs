@@ -16,9 +16,6 @@ namespace TodoListSofka.Dto
         
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
         public bool IsCompleted { get; set; }
-        /*
-        ired(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
-        public int IdCalendar { get; set; }
-        */
+     
     }
 }
