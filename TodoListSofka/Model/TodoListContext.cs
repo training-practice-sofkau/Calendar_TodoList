@@ -22,7 +22,6 @@ public partial class TodoListContext : DbContext
         modelBuilder.Entity<Todoitem>(entity =>
         {
             entity
-                .HasNoKey()
                 .ToTable("Todoitem");
 
             entity.Property(e => e.Description)

@@ -6,7 +6,7 @@ namespace TodoListSofka.Model;
 
 public partial class Todoitem
 {
-
+    [Key]
     public Guid Id { get; set; }
 
     [Required(ErrorMessage = "Este campo no se puede dejar vacío")]
