@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TodoListSofka.Model;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Conexion a la base de datos
+var connectionString = builder.Configuration.GetConnectionString("conexion");
+builder.Services.AddDbContextPool<CalendardbContext>(option =>
+option.UseSqlServer(connectionString));
+
 
 var app = builder.Build();
 
