@@ -120,7 +120,42 @@ namespace TodoListSofka.Controllers
 			}
 		}
 
+		[HttpPut("/Dia/{dia}/Tarea/{idTarea}")]
+		public async Task<Object> Put(int dia, int idTarea, TareaDto data)
+		{
+			var url = "https://localhost:7281/api/ToDo";
+			var updateTarea = new TareaModel();
+			int idDia;
+			if (data == null || dia == 0 || idTarea == 0)
+				return BadRequest("Datos ingresados errados. ");
 
+			var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == dia).Include(r => r.Tareas).ToList();
+			if (tarea.Count == 0)
+			{
+				return BadRequest("No hay eventos programados este dia. ");
+			}
+
+			updateTarea.Id = idTarea;
+			updateTarea.Title = data.Title;
+			updateTarea.Description = data.Description;
+			updateTarea.Responsible = data.Responsible;
+			updateTarea.Priority = data.Priority;
+			updateTarea.IsCompleted = data.IsCompleted;
+
+			string jsonString = JsonSerializer.Serialize(updateTarea);
+			var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+			try
+			{
+				var response = await client.PutAsync(url, content);
+				return Ok(jsonString);
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				return NotFound(new { code = 404, message = $"Id no encontrado. : {ex.Message}" });
+			}
+
+		}
 
 	}
 }
