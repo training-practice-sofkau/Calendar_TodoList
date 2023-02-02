@@ -44,9 +44,30 @@ namespace TodoListSofka.Controllers
                 Title = todoItemDTO.Title,
                 Description = todoItemDTO.Description,
                 Responsible = todoItemDTO.Responsible
+
             };
 
             await _CalendardbContext.Todoitems.AddAsync(todoItem);
+            await _CalendardbContext.SaveChangesAsync();
+
+            return Ok(todoItem);
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateTodoItem(Guid id, TodoitemDTO todoItemDTO)
+        {
+            var todoItem = await _CalendardbContext.Todoitems.FindAsync(id);
+
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            todoItem.Title = todoItemDTO.Title;
+            todoItem.Description = todoItemDTO.Description;
+            todoItem.Responsible = todoItemDTO.Responsible;
+
             await _CalendardbContext.SaveChangesAsync();
 
             return Ok(todoItem);
