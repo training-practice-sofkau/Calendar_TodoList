@@ -16,9 +16,9 @@ public partial class CalendarEventoContext : DbContext
     {
     }
 
-    public virtual DbSet<Fecha> Fechas { get; set; }
+    public virtual DbSet<FechaModel> Fechas { get; set; }
 
-    public virtual DbSet<Tarea> Tareas { get; set; }
+    public virtual DbSet<TareaModel> Tareas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -26,12 +26,12 @@ public partial class CalendarEventoContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Fecha>(entity =>
+        modelBuilder.Entity<FechaModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Fechas__3214EC074E38961F");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Fecha1)
+            entity.Property(e => e.Fecha)
                 .HasColumnType("datetime")
                 .HasColumnName("Fecha");
             entity.Property(e => e.IdEventos).HasColumnName("Id_Eventos");
@@ -42,7 +42,7 @@ public partial class CalendarEventoContext : DbContext
                 .HasConstraintName("FK__Fechas__Id_Event__398D8EEE");
         });
 
-        modelBuilder.Entity<Tarea>(entity =>
+        modelBuilder.Entity<TareaModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Tareas__3214EC07C4F337D7");
 

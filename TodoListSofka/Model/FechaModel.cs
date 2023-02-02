@@ -28,6 +28,6 @@ public partial class FechaModel
         Año = año;
         State = state;
     }
-
+    public virtual TareaModel IdEventosNavigation { get; set; } = null!;
     public FechaModel() { }
 }
