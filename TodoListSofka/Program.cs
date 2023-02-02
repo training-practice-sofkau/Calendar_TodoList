@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using TodoListSofka.Model;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<TodoListContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TodoListConnectionString")));
 
 // Add services to the container.
 
