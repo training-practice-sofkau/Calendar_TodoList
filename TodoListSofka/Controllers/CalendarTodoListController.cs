@@ -31,8 +31,8 @@ namespace TodoListSofka.Controllers
 
                 //var activeRecords =  _dbContext.Calendars.Where(r => r.Items.FirstOrDefault().Estate!=0).ToList();
                 // List<Calendar> activeRecords = _dbContext.Calendars.
-                var activeRecords = await  _dbContext.Calendars.Include(r => r.Items).ToListAsync();
-
+                var activeRecords = await _dbContext.Calendars.Include(r => r.Items.Where(x => x.Estate != 0)).ToListAsync();
+                //.Where(y=> y.Items!=null)
                 return Ok(activeRecords);
             }
             catch (Exception)
@@ -44,20 +44,21 @@ namespace TodoListSofka.Controllers
 
         }
 
-
-
-        /*
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Calendar>>> GetCalendars()
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetDayAndItem([FromRoute] int id)
         {
             try
             {
+                // var item = await _dbContext.TodoItems.FindAsync(id);
+                // var result = _dbContext.TodoItems.Where(r => r.Estate != 0).ToList();
+                 //var activeRecords =  _dbContext.Calendars.Include(r => r.Items.Where(x => x.IdCalendar == id));
+                
+                var task = from aux in _dbContext.Items where aux.IdCalendar == id select aux;
+                
+               // var dayAndItem = await _dbContext.Calendars.FindAsync(id);
 
-                //var activeRecords =  _dbContext.Calendars.Where(r => r.Items.FirstOrDefault().Estate!=0).ToList();
-                // List<Calendar> activeRecords = _dbContext.Calendars.
-                var activeRecords = _dbContext.Calendars.ToList();
-
-                return activeRecords;
+                return Ok(task);
             }
             catch (Exception)
             {
@@ -65,9 +66,13 @@ namespace TodoListSofka.Controllers
                 throw;
             }
 
-
         }
-        */
+
+
+
+
+
+
 
         [HttpPost]
         public async Task<ActionResult> PostItem(ItemAgregar item)
@@ -101,3 +106,26 @@ namespace TodoListSofka.Controllers
 
     }
 }
+
+/*
+[HttpGet]
+public async Task<ActionResult<IEnumerable<Calendar>>> GetCalendars()
+{
+    try
+    {
+
+        //var activeRecords =  _dbContext.Calendars.Where(r => r.Items.FirstOrDefault().Estate!=0).ToList();
+        // List<Calendar> activeRecords = _dbContext.Calendars.
+        var activeRecords = _dbContext.Calendars.ToList();
+
+        return activeRecords;
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+
+
+}
+*/
