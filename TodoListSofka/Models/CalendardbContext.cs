@@ -6,9 +6,11 @@ namespace TodoListSofka.Models;
 
 public partial class CalendardbContext : DbContext
 {
+
     public CalendardbContext()
     {
     }
+
 
     public CalendardbContext(DbContextOptions<CalendardbContext> options)
         : base(options)
