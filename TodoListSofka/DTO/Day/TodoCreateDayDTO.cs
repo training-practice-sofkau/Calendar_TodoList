@@ -1,8 +1,11 @@
-﻿namespace TodoListSofka.DTO.Day
+﻿using TodoListSofka.Model;
+
+namespace TodoListSofka.DTO.Day
 {
     public class TodoCreateDayDTO
     {
-        public DateTime dateTime { get; set; }
         public ToDoCreateDTO ToDoCreateDTO { get; set; }
+
+        public List<TodoItem> todoItems { get; set; }
     }
 }

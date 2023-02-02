@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoListSofka.Data;
 using TodoListSofka.DTO;
+using TodoListSofka.DTO.Day;
 using TodoListSofka.Model;
 
 namespace TodoListSofka.Controllers
@@ -67,6 +68,7 @@ namespace TodoListSofka.Controllers
             nuevaTarea.Priority = tareaDto.Priority;
             nuevaTarea.IsCompleted = tareaDto.IsCompleted;
             nuevaTarea.State = true;
+            nuevaTarea.FechaEntrega = tareaDto.dateTime;
 
             dbContext.Add(nuevaTarea);
             await dbContext.SaveChangesAsync();
@@ -74,12 +76,12 @@ namespace TodoListSofka.Controllers
         }
 
         [HttpGet("/FechaEvento")]
-        public async Task<Object> Post(Day fechaDto)
+        public async Task<Object> PostEvento(TodoCreateDayDTO todoCreateDayDTO)
         {
-            var nuevafecha = new Day();
-            nuevafecha.dateTime = fechaDto.dateTime;
-            nuevafecha.todoItems = fechaDto.todoItems;
-            dbContext.Add(nuevafecha);
+            var nuevoEvento = new TodoCreateDayDTO();
+            
+            nuevoEvento.ToDoCreateDTO = todoCreateDayDTO.ToDoCreateDTO;
+            dbContext.Add(nuevoEvento);
             
             await dbContext.SaveChangesAsync();
             return Ok();

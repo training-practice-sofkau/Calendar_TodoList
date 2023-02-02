@@ -1,6 +1,6 @@
 ﻿namespace TodoListSofka.Model
 {
-    public class Day : Calendar
+    public class Day 
     {
         public List<TodoItem> todoItems = new List<TodoItem>();
        

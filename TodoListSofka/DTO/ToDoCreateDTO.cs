@@ -10,6 +10,8 @@ namespace TodoListSofka.DTO
         [Required] public string Priority { get; set; } = null!;
         public bool IsCompleted { get; set; }
 
+        public DateTime dateTime { get; set; }
+
         public ToDoCreateDTO(string title, string description, string responsible, string priority,
             bool isCompleted)
         {

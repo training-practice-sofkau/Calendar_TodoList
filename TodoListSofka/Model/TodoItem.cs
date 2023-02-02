@@ -20,6 +20,8 @@ namespace TodoListSofka.Model
         [Required(ErrorMessage = "IsCompleted is required")]
         public bool IsCompleted { get; set; }
 
+        public DateTime FechaEntrega { get; set; }
+
         //para el borrado lógico implementar bool o int según su preferencia.
         //si es int puedo colcocar un rango entre o y 1
         public bool State { get; set; }
