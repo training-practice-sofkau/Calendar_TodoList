@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TodoListSofka.DTO;
 using TodoListSofka.Models;
 
@@ -20,37 +21,67 @@ namespace TodoListSofka.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Todoitem>>> GetTodoitems()
         {
-            var item = await _CalendardbContext.Todoitems.ToListAsync();
-            return item;
+            try
+            {
+                var item = await _CalendardbContext.Todoitems.Where(x => x.State == true && x.IsCompleted == false).ToListAsync();
+                return item;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new
+                {
+                    code = 404,
+                    message = $"No hay items para mostrar: {e.Message}"
+                });
+            }
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<ActionResult<IEnumerable<Todoitem>>> GetTodoitems(Guid id)
+        public async Task<ActionResult<IEnumerable<Todoitem>>> GetTodoitems([FromRoute] Guid id)
         {
-            var item = await _CalendardbContext.Todoitems.Where(x => x.Id == id || x.IdCalendar == id).ToListAsync();
-            return item;
+            try
+            {
+                var item = _CalendardbContext.Todoitems.Where(x =>
+                    x.IdCalendar == id || x.Id == id && x.State == true && x.IsCompleted == false).ToList();
+                if (item.IsNullOrEmpty())
+                {
+                    return BadRequest(new
+                    { code = 404, message = $"No existen o no están disponibles items con el id asignado" });
+                }
+                return item;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 404, message = e.Message });
+            }
         }
-
 
         [HttpPost]
         [Route("{id:Guid}")]
         public async Task<IActionResult> CreateTodoItem(Guid id, TodoitemDTO todoItemDTO)
         {
 
-            var todoItem = new Todoitem
+            try
             {
-                IdCalendar = id,
-                Title = todoItemDTO.Title,
-                Description = todoItemDTO.Description,
-                Responsible = todoItemDTO.Responsible
+                var todoItem = new Todoitem
+                {
+                    IdCalendar = id,
+                    Title = todoItemDTO.Title,
+                    Description = todoItemDTO.Description,
+                    Responsible = todoItemDTO.Responsible
+                };
 
-            };
+                await _CalendardbContext.Todoitems.AddAsync(todoItem);
+                await _CalendardbContext.SaveChangesAsync();
 
-            await _CalendardbContext.Todoitems.AddAsync(todoItem);
-            await _CalendardbContext.SaveChangesAsync();
-
-            return Ok(todoItem);
+                return Ok(todoItem);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new
+                { code = 404, message = $"No existen días con el id asignado: {e.Message}" });
+            }
         }
 
         [HttpPut]
@@ -61,7 +92,8 @@ namespace TodoListSofka.Controllers
 
             if (todoItem == null)
             {
-                return NotFound();
+                return BadRequest(new
+                { code = 404, message = $"No existen o no están disponibles items con el id asignado" });
             }
 
             todoItem.Title = todoItemDTO.Title;
@@ -81,7 +113,8 @@ namespace TodoListSofka.Controllers
 
             if (todoItem == null)
             {
-                return NotFound();
+                return BadRequest(new
+                { code = 404, message = $"No existen o no están disponibles items con el id asignado" });
             }
 
             todoItem.IsCompleted = true;
@@ -99,7 +132,8 @@ namespace TodoListSofka.Controllers
 
             if (todoItem == null)
             {
-                return NotFound();
+                return BadRequest(new
+                { code = 404, message = $"No existen o no están disponibles items con el id asignado" });
             }
 
             todoItem.State = false;
