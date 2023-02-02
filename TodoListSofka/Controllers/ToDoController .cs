@@ -73,6 +73,19 @@ namespace TodoListSofka.Controllers
             return Ok();
         }
 
+        [HttpGet("/FechaEvento")]
+        public async Task<Object> Post(Day fechaDto)
+        {
+            var nuevafecha = new Day();
+            nuevafecha.dateTime = fechaDto.dateTime;
+            nuevafecha.todoItems = fechaDto.todoItems;
+            dbContext.Add(nuevafecha);
+            
+            await dbContext.SaveChangesAsync();
+            return Ok();
+            
+        }
+
         [HttpPut]
         public async Task<Object> Put(ToDoUpdateDto itemData)
         {
