@@ -17,7 +17,24 @@ namespace TodoListSofka.Controllers
             _CalendardbContext = calendardbContext;
         }
 
+        [HttpPost]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> CreateTodoItem(Guid id, TodoitemDTO todoItemDTO)
+        {
 
+            var todoItem = new Todoitem
+            {
+                IdCalendar = id,
+                Title = todoItemDTO.Title,
+                Description = todoItemDTO.Description,
+                Responsible = todoItemDTO.Responsible
+            };
+
+            await _CalendardbContext.Todoitems.AddAsync(todoItem);
+            await _CalendardbContext.SaveChangesAsync();
+
+            return Ok(todoItem);
+        }
 
     }
 }
