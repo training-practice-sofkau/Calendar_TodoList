@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TodoListSofka.Dto;
 using TodoListSofka.Models;
 
@@ -68,12 +69,6 @@ namespace TodoListSofka.Controllers
 
         }
 
-
-
-
-
-
-
         [HttpPost]
         public async Task<ActionResult> PostItem(ItemAgregar item)
         {
@@ -104,7 +99,62 @@ namespace TodoListSofka.Controllers
             return Ok($"Tarea creada con exito {itemcreado.ToString()}");
         }
 
+
+
+        [HttpPut]
+        [Route("/completedTask/{id:int}")]
+        public async Task<IActionResult> CompleteOneItem([FromRoute] int id, bool complete)
+        {
+            try
+            {
+
+
+                var respon = await _dbContext.Items.FindAsync(id);
+                respon.IsCompleted = complete;
+                await _dbContext.SaveChangesAsync();
+
+                /*
+                var task = (from aux in _dbContext.Items
+                            where (aux.IdCalendar == id)
+                            select new ItemActualizar()
+                            {
+                                Title = aux.Title,
+                                Descripccion = aux.Descripccion,
+                                Responsible = aux.Resposible,
+                                IsCompleted = complete,
+
+                            }).FirstOrDefault();
+                      await _dbContext.SaveChangesAsync();
+
+                         return Ok(task);   
+                */
+
+                return Ok(respon);
+
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+
+
+
+
+            }
+
+             return Ok("Tarea actualizada");
+        }
+
+
+
+
+
+
+
+
+
+
     }
+
 }
 
 /*
