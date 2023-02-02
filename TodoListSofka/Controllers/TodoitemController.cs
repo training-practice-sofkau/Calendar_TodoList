@@ -73,5 +73,41 @@ namespace TodoListSofka.Controllers
             return Ok(todoItem);
         }
 
+        [HttpPut]
+        [Route("update/{id:Guid}")]
+        public async Task<IActionResult> CompleteTodoItem(Guid id)
+        {
+            var todoItem = await _CalendardbContext.Todoitems.FindAsync(id);
+
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            todoItem.IsCompleted = true;
+
+            await _CalendardbContext.SaveChangesAsync();
+
+            return Ok(todoItem);
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteTodoItem(Guid id)
+        {
+            var todoItem = await _CalendardbContext.Todoitems.FindAsync(id);
+
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            todoItem.State = false;
+
+            await _CalendardbContext.SaveChangesAsync();
+
+            return Ok(todoItem);
+        }
+
     }
 }
