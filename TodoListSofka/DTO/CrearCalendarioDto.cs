@@ -12,7 +12,7 @@ namespace TodoListSofka1.DTO
 		[Required] public string Priority { get; set; } = null!;
 		public bool IsCompleted { get; set; }
 
-		[Required(ErrorMessage = "CalendarId is required")] public int CalendarModelId { get; set; }
+		//[Required(ErrorMessage = "CalendarId is required")] public int CalendarModelId { get; set; }
 		public CrearCalendarioDto(int dia)
 		{
 			Dia = dia;

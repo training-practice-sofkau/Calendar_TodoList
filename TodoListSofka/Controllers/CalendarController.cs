@@ -31,7 +31,7 @@ namespace TodoListSofka.Controllers
 		public async Task<IActionResult> GetDias()
 		{
 			//Busca las Tareas que no hayan sido eliminados y los retorna
-			var tareaActiva = dbContext.Eventos_Calendario.Where(r =>r.State != false).Include(r => r.Tareas).ToList();
+			var tareaActiva = dbContext.Eventos_Calendario.Where(r =>r.Id != 0 && r.Tareas.Count != 0).Include(r => r.Tareas).ToList();
 			return Ok(tareaActiva);
 
 		}
@@ -50,16 +50,15 @@ namespace TodoListSofka.Controllers
 			return BadRequest();
 		}
 
-		[HttpGet("{id}")]
-		public async Task<IActionResult> Get(int id)
+		[HttpGet("{dia}")]
+		public async Task<IActionResult> Get(int dia)
 		{
 			try
 			{
-				var tarea = dbContext.Eventos_Calendario.Where(r => r.State && r.Dia == id).Include(r => r.Tareas).ToList();
-				//var tarea = dbContext.Eventos_Calendario.Where(r => r.State && r.Id == id).Include(r => r.Tareas).ToList();
-				if (tarea == null || id == 0 )
+				var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == dia).Include(r => r.Tareas).ToList();
+				if (tarea == null || dia == 0 )
 				{
-					return BadRequest(new { code = 400, message = "Id no encontrado. " });
+					return BadRequest(new { code = 400, message = "Dia no encontrado. " });
 				}
 				else
 				{
@@ -68,7 +67,7 @@ namespace TodoListSofka.Controllers
 			}
 			catch (Exception ex)
 			{
-				return NotFound(new { code = 404, message = $"Id no encontrado. : {ex.Message}" });
+				return NotFound(new { code = 404, message = $"Dia no encontrado. : {ex.Message}" });
 			}
 		}
 
@@ -78,21 +77,34 @@ namespace TodoListSofka.Controllers
 		{
 			var url = "https://localhost:7281/api/ToDo";
 			var nuevoDia = new CalendarModel();
-			var nuevaTarea = new TareaDto();
+			var nuevaTarea = new TareaModel();
+			int idTarea = 0;
 
 			nuevoDia.Dia = eventoDto.Dia;
 			nuevoDia.Mes = 2;
 			nuevoDia.Anio = 2023;
-			nuevoDia.State = true;
 
-			dbContext.Add(nuevoDia);
+			var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == eventoDto.Dia).Include(r => r.Tareas).ToList();
+			
+			if (tarea.Count == 0)
+			{
+				dbContext.Add(nuevoDia);
+				await dbContext.SaveChangesAsync();
+				tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == eventoDto.Dia).Include(r => r.Tareas).ToList();
+			}
+
+			foreach (var item in tarea)
+			{
+				idTarea = item.Id;
+			}
+
 
 			nuevaTarea.Title = eventoDto.Title;
 			nuevaTarea.Description = eventoDto.Description;
 			nuevaTarea.Responsible = eventoDto.Responsible;
 			nuevaTarea.Priority = eventoDto.Priority;
 			nuevaTarea.IsCompleted = eventoDto.IsCompleted;
-			nuevaTarea.CalendarModelId = eventoDto.CalendarModelId;
+			nuevaTarea.CalendarModelId = idTarea;
 
 
 			string jsonString = JsonSerializer.Serialize(nuevaTarea);
@@ -100,18 +112,15 @@ namespace TodoListSofka.Controllers
 
 			try
 			{
-				await dbContext.SaveChangesAsync();
 				var response = await client.PostAsync(url, content);
-				return Ok(response);
+				return Ok(jsonString);
 			}catch(Exception ex)
 			{
-				return ex.Message;
+				return BadRequest();
 			}
-			
-			
-
-			
 		}
+
+
 
 	}
 }

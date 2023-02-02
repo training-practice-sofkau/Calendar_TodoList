@@ -12,16 +12,14 @@ namespace TodoListSofka1.Models
 
 		public int Anio { get; set; } = 2023;
 
-		public bool State { get; set; }
 		public List<TareaModel> Tareas { get; set; }
 
 
-		public CalendarModel(int dia, int mes, int anio, bool state)
+		public CalendarModel(int dia, int mes, int anio)
 		{
 			Dia = dia;
 			Mes = mes;
 			Anio = anio;
-			State = state;
 		}
 
 		public CalendarModel() { }
