@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TodoListSofka.Models;
 
@@ -9,15 +10,20 @@ public partial class Todoitem
 
     public Guid IdCalendar { get; set; }
 
+    [Required]
     public string Title { get; set; } = null!;
 
+    [Required]
     public string Description { get; set; } = null!;
-
+    [Required]
     public string Responsible { get; set; } = null!;
 
-    public bool IsCompleted { get; set; }
 
-    public bool State { get; set; }
+    [System.ComponentModel.DefaultValue(false)]
+    public bool IsCompleted { get; set; } = false;
+
+    [System.ComponentModel.DefaultValue(true)]
+    public bool State { get; set; } = true;
 
     public virtual Calendar? IdCalendarNavigation { get; set; }
 }
