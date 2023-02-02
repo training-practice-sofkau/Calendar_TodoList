@@ -98,14 +98,12 @@ namespace TodoListSofka.Controllers
 				idTarea = item.Id;
 			}
 
-
 			nuevaTarea.Title = eventoDto.Title;
 			nuevaTarea.Description = eventoDto.Description;
 			nuevaTarea.Responsible = eventoDto.Responsible;
 			nuevaTarea.Priority = eventoDto.Priority;
 			nuevaTarea.IsCompleted = eventoDto.IsCompleted;
 			nuevaTarea.CalendarModelId = idTarea;
-
 
 			string jsonString = JsonSerializer.Serialize(nuevaTarea);
 			var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
@@ -126,21 +124,40 @@ namespace TodoListSofka.Controllers
 			var url = "https://localhost:7281/api/ToDo";
 			var updateTarea = new TareaModel();
 			int idDia;
+			bool ban = false;
+
 			if (data == null || dia == 0 || idTarea == 0)
 				return BadRequest("Datos ingresados errados. ");
 
-			var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == dia).Include(r => r.Tareas).ToList();
+			var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == dia && r.Tareas.Count != 0).Include(r => r.Tareas).ToList();
+
 			if (tarea.Count == 0)
-			{
 				return BadRequest("No hay eventos programados este dia. ");
+
+			foreach (var item in tarea)
+			{
+				foreach (var item1 in item.Tareas)
+				{
+					if (item1.Id == idTarea)
+					{
+						ban= true;
+					}
+				}
 			}
 
-			updateTarea.Id = idTarea;
-			updateTarea.Title = data.Title;
-			updateTarea.Description = data.Description;
-			updateTarea.Responsible = data.Responsible;
-			updateTarea.Priority = data.Priority;
-			updateTarea.IsCompleted = data.IsCompleted;
+			if(ban)
+			{
+				updateTarea.Id = idTarea;
+				updateTarea.Title = data.Title;
+				updateTarea.Description = data.Description;
+				updateTarea.Responsible = data.Responsible;
+				updateTarea.Priority = data.Priority;
+				updateTarea.IsCompleted = data.IsCompleted;
+			}
+			else
+			{
+				return BadRequest("Id de tarea no encontrado.");
+			}
 
 			string jsonString = JsonSerializer.Serialize(updateTarea);
 			var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
@@ -152,7 +169,7 @@ namespace TodoListSofka.Controllers
 			}
 			catch (DbUpdateConcurrencyException ex)
 			{
-				return NotFound(new { code = 404, message = $"Id no encontrado. : {ex.Message}" });
+				return NotFound(new { code = 404, message = $"Error en datos ingresados. : {ex.Message}" });
 			}
 
 		}
