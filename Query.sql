@@ -6,7 +6,7 @@ go
 use CalendarEvento
 go
 
---Creo la tabla Tarea
+--Creo la tabla Fecha
 Create table Fechas(
 Id UNIQUEIDENTIFIER primary key not null,
 Fecha DateTime not null,
@@ -29,3 +29,7 @@ State bit not null
 --Relaciono las tablas
 Alter table Fechas Add foreign key(Id_Eventos) References Tareas(Id)
 Go
+
+--Agrego Columna a la tabla Tarea
+Alter table Tareas add Jornada varchar(10)
+go
