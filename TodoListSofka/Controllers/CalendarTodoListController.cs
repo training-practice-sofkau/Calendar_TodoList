@@ -25,6 +25,7 @@ namespace TodoListSofka.Controllers
 
 
         [HttpGet]
+        [Route("AllDaysAndItems")]
         public async Task<IActionResult> GetCalendars()
         {
             try
@@ -46,19 +47,15 @@ namespace TodoListSofka.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("/OneDayAndOneItem/{id:int}")]
         public async Task<IActionResult> GetDayAndItem([FromRoute] int id)
         {
             try
             {
-                // var item = await _dbContext.TodoItems.FindAsync(id);
-                // var result = _dbContext.TodoItems.Where(r => r.Estate != 0).ToList();
-                 //var activeRecords =  _dbContext.Calendars.Include(r => r.Items.Where(x => x.IdCalendar == id));
                 
                 var task = from aux in _dbContext.Items where aux.IdCalendar == id select aux;
                 
-               // var dayAndItem = await _dbContext.Calendars.FindAsync(id);
-
+               
                 return Ok(task);
             }
             catch (Exception)
@@ -69,40 +66,8 @@ namespace TodoListSofka.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<ActionResult> PostItem(ItemAgregar item)
-        {
-
-            var itemcreado = new Item()
-            {
-                Title = item.Title,
-                Descripccion = item.Descripccion,
-                Resposible = item.Resposible,
-                IsCompleted = item.IsCompleted,
-                Estate = 1,
-                IdCalendar =item.IdCalendar
-
-            };
-
-            var calendario = new Calendar()
-            {
-                NumberDaY = item.IdCalendar
-
-            };
-
-
-            await _dbContext.Items.AddAsync(itemcreado);
-            calendario.Items.Add(itemcreado);
-            await _dbContext.Calendars.AddAsync(calendario);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok($"Tarea creada con exito {itemcreado.ToString()}");
-        }
-
-
-
         [HttpPut]
-        [Route("/completedTask/{id:int}")]
+        [Route("/CompletedOneTask/{id:int}")]
         public async Task<IActionResult> CompleteOneItem([FromRoute] int id, bool complete)
         {
             try
@@ -112,22 +77,6 @@ namespace TodoListSofka.Controllers
                 var respon = await _dbContext.Items.FindAsync(id);
                 respon.IsCompleted = complete;
                 await _dbContext.SaveChangesAsync();
-
-                /*
-                var task = (from aux in _dbContext.Items
-                            where (aux.IdCalendar == id)
-                            select new ItemActualizar()
-                            {
-                                Title = aux.Title,
-                                Descripccion = aux.Descripccion,
-                                Responsible = aux.Resposible,
-                                IsCompleted = complete,
-
-                            }).FirstOrDefault();
-                      await _dbContext.SaveChangesAsync();
-
-                         return Ok(task);   
-                */
 
                 return Ok(respon);
 
@@ -142,6 +91,86 @@ namespace TodoListSofka.Controllers
             }
 
              return Ok("Tarea actualizada");
+        }
+
+
+        [HttpPut]
+        [Route("/UpdateAllTask/{id:int}")]
+        public async Task<IActionResult> updateTaks([FromRoute] int id, ItemActualizar todoitemAc)
+        {
+            try
+            {
+
+                var item = await _dbContext.Items.FindAsync(id);
+                item.Title = todoitemAc.Title;
+                item.Descripccion = todoitemAc.Descripccion;
+                item.Resposible = todoitemAc.Resposible;
+                item.IsCompleted = todoitemAc.IsCompleted;
+                item.IdCalendar = todoitemAc.IdCalendar;
+
+                await _dbContext.SaveChangesAsync();
+                return Ok($"Tarea actualizada, {item}");
+
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+
+            }
+
+            return Ok("Tarea actualizada");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> PostItem(ItemAgregar item, int dayUser)
+        {
+
+            var day = await _dbContext.Calendars.FindAsync(dayUser);
+
+
+
+
+
+            if (day == null){
+
+                var calendario = new Calendar()
+                {
+
+                    NumberDaY = dayUser
+                    
+                 };
+
+
+                var itemcreado = new Item()
+                {
+                    Title = item.Title,
+                    Descripccion = item.Descripccion,
+                    Resposible = item.Resposible,
+                    IsCompleted = item.IsCompleted,
+                    Estate = 1,
+                    IdCalendar = dayUser
+
+                };
+                await _dbContext.Items.AddAsync(itemcreado);
+                calendario.Items.Add(itemcreado);
+                await _dbContext.Calendars.AddAsync(calendario);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            var itemcreado2 = new Item()
+            {
+                Title = item.Title,
+                Descripccion = item.Descripccion,
+                Resposible = item.Resposible,
+                IsCompleted = item.IsCompleted,
+                Estate = 1,
+                IdCalendar = dayUser
+            };
+
+            await _dbContext.Items.AddAsync(itemcreado2);
+            await _dbContext.SaveChangesAsync();
+            return Ok();
         }
 
 

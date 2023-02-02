@@ -12,9 +12,13 @@ namespace TodoListSofka.Dto
         public string Descripccion { get; set; } = null!;
         
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
-        public string? Responsible { get; set; }
+        public string? Resposible { get; set; }
         
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
         public bool IsCompleted { get; set; }
+
+        [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
+        public int? IdCalendar { get; set; }
+
     }
 }
