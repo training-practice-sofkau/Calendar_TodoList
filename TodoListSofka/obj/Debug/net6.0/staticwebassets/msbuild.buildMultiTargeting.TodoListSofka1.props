@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TodoListSofka1.props" />
+</Project>
