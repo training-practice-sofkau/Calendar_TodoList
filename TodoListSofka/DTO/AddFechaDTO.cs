@@ -12,7 +12,5 @@ namespace TodoListSofka.DTO
         public int? Mes { get; set; }
 
         public int? Año { get; set; }
-
-        public bool State { get; set; }
     }
 }
