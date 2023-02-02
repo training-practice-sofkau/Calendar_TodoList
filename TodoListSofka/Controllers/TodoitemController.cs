@@ -24,6 +24,14 @@ namespace TodoListSofka.Controllers
             return item;
         }
 
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<ActionResult<IEnumerable<Todoitem>>> GetTodoitems(Guid id)
+        {
+            var item = await _CalendardbContext.Todoitems.Where(x => x.Id == id || x.IdCalendar == id).ToListAsync();
+            return item;
+        }
+
 
         [HttpPost]
         [Route("{id:Guid}")]
