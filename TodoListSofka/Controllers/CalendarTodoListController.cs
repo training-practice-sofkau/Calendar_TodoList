@@ -13,7 +13,7 @@ namespace TodoListSofka.Controllers
 
 
         private readonly CalendarTodoListContext _dbContext;
-
+        public IJornada jorn;
 
         public CalendarTodoListController(CalendarTodoListContext dbContext){
 
@@ -33,7 +33,8 @@ namespace TodoListSofka.Controllers
                 // List<Calendar> activeRecords = _dbContext.Calendars.
                 var activeRecords = await _dbContext.Calendars.Include(r => r.Items.Where(x => x.Estate != 0)).ToListAsync();
                 //.Where(y=> y.Items!=null)
-                return Ok(activeRecords);
+
+                return Ok((activeRecords));
             }
             catch (Exception)
             {
@@ -52,7 +53,9 @@ namespace TodoListSofka.Controllers
             {
                 
                 var task = from aux in _dbContext.Items where (aux.IdCalendar == id && aux.Estate!=0) select aux;
+
                 
+
                
                 return Ok(task);
             }
@@ -121,11 +124,10 @@ namespace TodoListSofka.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> PostItem(ItemAgregar item, int dayUser)
+        public async Task<ActionResult> PostItem(ItemAgregar item, int dayUser, string jornadaUser)
         {
-
+            jorn = Day.CreateJornada(jornadaUser);
             var day = await _dbContext.Calendars.FindAsync(dayUser);
-
 
             if (day == null){
 
@@ -135,7 +137,6 @@ namespace TodoListSofka.Controllers
                     NumberDaY = dayUser
                     
                  };
-
 
                 var itemcreado = new Item()
                 {
@@ -151,6 +152,10 @@ namespace TodoListSofka.Controllers
                 calendario.Items.Add(itemcreado);
                 await _dbContext.Calendars.AddAsync(calendario);
                 await _dbContext.SaveChangesAsync();
+
+                var listjornadasalmacenadasMorning = jorn.ShowJornada(itemcreado);
+
+               return Ok("Tarea Creada Con Exito " + listjornadasalmacenadasMorning.ToString());
             }
 
             var itemcreado2 = new Item()
@@ -165,8 +170,10 @@ namespace TodoListSofka.Controllers
 
             await _dbContext.Items.AddAsync(itemcreado2);
             await _dbContext.SaveChangesAsync();
-            return Ok();
+            var listjornadasalmacenas = jorn.ShowJornada(itemcreado2);
+            return Ok( "Tarea Creada Con Exito "+ listjornadasalmacenas.ToString());
         }
+
 
 
         [HttpDelete("{id}")]
@@ -200,38 +207,7 @@ namespace TodoListSofka.Controllers
         }
 
 
-        private bool ItemAvailable(int id)
-        {
-
-            return (_dbContext.Items?.Any(x => x.Id == id)).GetValueOrDefault();
-
-        }
-
-    }
-
-
-
-}
-
-/*
-[HttpGet]
-public async Task<ActionResult<IEnumerable<Calendar>>> GetCalendars()
-{
-    try
-    {
-
-        //var activeRecords =  _dbContext.Calendars.Where(r => r.Items.FirstOrDefault().Estate!=0).ToList();
-        // List<Calendar> activeRecords = _dbContext.Calendars.
-        var activeRecords = _dbContext.Calendars.ToList();
-
-        return activeRecords;
-    }
-    catch (Exception)
-    {
-
-        throw;
     }
 
 
 }
-*/
