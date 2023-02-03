@@ -2,7 +2,7 @@
 Create database CalendarEvento
 go
 
---Uso la base de datos Calendar Evento
+--Me ubico en la base de datos Calendar Evento
 use CalendarEvento
 go
 
@@ -32,4 +32,15 @@ Go
 
 --Agrego Columna a la tabla Tarea
 Alter table Tareas add Jornada varchar(10)
+go
+
+
+--Busqueda de datos
+select * from Tareas
+go
+
+select * from Fechas
+go
+
+select * from Fechas join Tareas on Fechas.Id_Eventos = Tareas.Id
 go

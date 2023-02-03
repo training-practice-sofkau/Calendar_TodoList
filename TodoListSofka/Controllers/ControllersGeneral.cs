@@ -28,7 +28,6 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-
                 var Tarea = _mapper.Map<TareaModel>(AddFechaTareaDTO.AddTareaDTO);
                 {
                     Tarea.State = true;
@@ -45,7 +44,8 @@ namespace TodoListSofka.Controllers
                     Fechas.Año = Fecha.Year;
                     Fechas.State = true;
                     Fechas.IdEventos = Tarea.Id;
-                };
+                }
+
                 if (Fechas.Dia <= 29 && Fechas.Dia > 0 && Fechas.Mes == 2)
                 {
                     await dbContext.Fechas.AddAsync(Fechas);
@@ -55,7 +55,8 @@ namespace TodoListSofka.Controllers
                 {
                     return BadRequest(new { code = 400, message = $"No se pudo añadir el elemento Digite bien la fecha" });
                 }
-                return Ok("Datos Guardados: " + " " + Fechas + " " + Tarea);
+
+                return Ok("Datos Guardados: " + Fechas + " " + Tarea);
             }
             catch (Exception e)
             {
@@ -91,7 +92,8 @@ namespace TodoListSofka.Controllers
             }
         }
 
-         [HttpGet("GetAllTarea/Get")]
+        //Saco todos las Tareas
+        [HttpGet("GetAllTarea/Get")]
          public async Task<IActionResult> GetAllTarea()
          {
              try
@@ -119,7 +121,7 @@ namespace TodoListSofka.Controllers
              }
          }
 
-
+        //Saco todas las tareas de la tarde
         [HttpGet("GetTareaDiurno/Get")]
         public async Task<IActionResult> GetTareaDiurno()
         {
@@ -148,6 +150,7 @@ namespace TodoListSofka.Controllers
             }
         }
 
+        //Saco todas las tareas Nocturnas
         [HttpGet("GetTareaNocturno/Get")]
         public async Task<IActionResult> GetTareaNocturno()
         {
@@ -176,20 +179,26 @@ namespace TodoListSofka.Controllers
             }
         }
 
-        /*
-        //Se trae una fecha
+        //Se trae una fecha y tarea
         [HttpGet("{id:guid}/Get")]
-        public async Task<IActionResult> GetUniqueFecha([FromRoute] Guid id)
+        public async Task<IActionResult> GetUniqueFechaTarea([FromRoute] Guid id)
         {
             try
             {
                 //Get de un item con LINQ + DTO
                 var toDoItems = from item in dbContext.Fechas
+                                join item2 in dbContext.Tareas
+                                on item.IdEventos equals item2.Id
                                 where item.State && item.Id == id
-                                select new GetFechaDTO()
+                                select new
                                 {
                                     Fecha = item.Fecha,
-                                    State = item.State
+                                    State = item.State,
+                                    Nombre = item2.Nombre,
+                                    Descripcion = item2.Descripcion,
+                                    Jornada= item2.Jornada,
+                                    State_Tarea = item2.State
+
                                 };
 
                 if (toDoItems.Any() && toDoItems != null)
@@ -202,25 +211,40 @@ namespace TodoListSofka.Controllers
             {
                 return BadRequest(new { code = 404, message = $"No hay un elemento con este id: {e.Message}" });
             }
-        }*/
+        }
 
-        /*  //Actulizar item completo DTO
+          //Actulizar item completo DTO
           [HttpPut("{id:guid}/UpdateAll")]
-          public async Task<IActionResult> UpdateAllItem([FromRoute] Guid id, UpdateFechaDTO updateToDoItemDTO)
+          public async Task<IActionResult> UpdateAll([FromRoute] Guid id, UpdateFechaTareaDTO UpdateFechaTareaDTO)
           {
               try
               {
-                  var ToDoItem = await dbContext.Fechas.Where(list => list.State && list.Id == id)
-                      .ToListAsync();
+                  var Fecha = await dbContext.Fechas.Where(list => list.State && list.Id == id).ToListAsync();
+                  var Tarea = await dbContext.Tareas.Where(list => list.State && list.Id == id).ToListAsync();
+                  DateTime Fechas = new DateTime(2042, 12, 24);
 
-                  if (ToDoItem.Count != 0 && ToDoItem != null)
+                if (Tarea.Count != 0 && Tarea != null)
+                {
+                    foreach (var item in Tarea)
+                    {
+                        item.Nombre = UpdateFechaTareaDTO.AddTareaDTO.Nombre;
+                        item.Descripcion = UpdateFechaTareaDTO.AddTareaDTO.Descripcion;
+                        item.Jornada = UpdateFechaTareaDTO.AddTareaDTO.Jornada;
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
+                if (Fecha.Count != 0 && Fecha != null)
+                {
+                 foreach (var item in Fecha)
                   {
-                      foreach (var item in ToDoItem)
-                      {
-                          item.Fecha = updateToDoItemDTO.Fecha;
-                      }
-                      await dbContext.SaveChangesAsync();
-                      return Ok(ToDoItem);
+                          item.Fecha = UpdateFechaTareaDTO.AddFechaDTO.Fecha;
+                          Fechas = item.Fecha;
+                  }
+                    if (Fechas.Day <= 29 && Fechas.Day > 0 && Fechas.Month == 2)
+                    {
+                        await dbContext.SaveChangesAsync();
+                        return Ok("Datos: " + Fecha + Tarea);
+                    }
                   }
                   return BadRequest(new { code = 404, message = "No hay un elemento con este id" });
               }
@@ -230,13 +254,13 @@ namespace TodoListSofka.Controllers
               }
           }
 
-          //delete item con DTO
+          //delete Tareas con DTO
           [HttpDelete("{id:guid}")]
           public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
           {
               try
               {
-                  var ToDoItem = await dbContext.Fechas.Where(list => list.State && list.Id == id)
+                  var ToDoItem = await dbContext.Tareas.Where(list => list.State && list.Id == id)
                       .ToListAsync();
 
                   if (ToDoItem.Count != 0 && ToDoItem != null)
@@ -254,6 +278,6 @@ namespace TodoListSofka.Controllers
               {
                   return BadRequest(new { code = 400, message = $"No se pudo eliminar el elemento: {e.Message}" });
               }
-          }*/
+          }
     }
 }

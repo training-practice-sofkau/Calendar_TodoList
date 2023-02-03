@@ -20,6 +20,8 @@ namespace TodoListSofka.Controllers
 
             //Modelo de las cosas
             CreateMap<TareaModel, AddFechaTareaDTO>().ReverseMap();
+            CreateMap<TareaModel, GetFechaTareaDTO>().ReverseMap();
+            CreateMap<TareaModel, UpdateFechaTareaDTO>().ReverseMap();
         }
     }
 }
