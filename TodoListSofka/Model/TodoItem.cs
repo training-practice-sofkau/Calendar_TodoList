@@ -1,36 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoListSofka.Model
+namespace TodoListSofka.Model;
+
+public partial class ToDoItem
 {
-    public class TodoItem
-    {
-        public Guid Id { get; set; }
-        [Required]
-        public string Title { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public string Responsible { get; set; }
-        public bool IsCompleted { get; set; }
+    public Guid ItemId { get; set; }
+    [Required]
+    public string Title { get; set; } = null!;
+    [Required]
+    public string Description { get; set; } = null!;
+    [Required]
+    public string Responsible { get; set; } = null!;
+    [Required]
+    public bool IsCompleted { get; set; }
+    [Required]
+    public bool State { get; set; }
+    [Required]
+    [Range(1, 28,
+            ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+    public int? IndexDay { get; set; }
 
-        //para el borrado lógico implementar bool o int según su preferencia.
-        //si es int puedo colcocar un rango entre o y 1
-        public bool State { get; set; }
-
-        public TodoItem(Guid id, string title, string description, string responsible, 
-            bool isCompleted, bool state)
-        {
-            Id = id;
-            Title = title;
-            Description = description;
-            Responsible = responsible;
-            IsCompleted = isCompleted;
-            State = state;
-        }
-
-        public TodoItem() { }
-
-
-
-    }
+    public virtual Calendar? IndexDayNavigation { get; set; }
 }
