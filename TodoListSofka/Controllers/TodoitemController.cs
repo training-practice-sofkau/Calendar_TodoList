@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoListSofka.DTO;
 using TodoListSofka.Models;
+using TodoListSofka.PatternDesign;
 
 namespace TodoListSofka.Controllers
 {
@@ -24,7 +25,17 @@ namespace TodoListSofka.Controllers
             try
             {
                 var item = await _CalendardbContext.Todoitems.Where(x => x.State == true && x.IsCompleted == false).ToListAsync();
-                return item;
+
+                SingletonList singletonList = SingletonList.GetInstance;
+
+                singletonList.List.Clear();
+
+                foreach (var items in item)
+                {
+                    singletonList.List.Add(items);
+                }
+
+                return singletonList.List;
             }
             catch (Exception e)
             {

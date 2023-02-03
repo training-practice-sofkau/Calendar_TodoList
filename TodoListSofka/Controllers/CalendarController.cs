@@ -20,7 +20,7 @@ namespace TodoListSofka.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Calendar>>> GetCalendar()
         {
-            var item = await _CalendardbContext.Calendars.ToListAsync();
+            var item = await _CalendardbContext.Calendars.OrderBy(Day => Day.Day).ToListAsync();
             return item;
         }
 
