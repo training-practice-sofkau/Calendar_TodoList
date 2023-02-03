@@ -28,11 +28,19 @@ namespace TodoListSofka1.Logica
 			Calendario.Instance.Subscribe(usuario);
 		}
 
-		public void notificarEvento()
+		public void notificarEvento(string evento)
 		{
 			foreach (var item in Calendario.Instance.Observadores)
 			{
-				item.Update();
+				switch (evento)
+				{
+					case "Crear":
+						item.Create();
+						break;
+					case "Actualizar":
+						item.Update();
+						break;
+				}
 			}
 		}
 	}

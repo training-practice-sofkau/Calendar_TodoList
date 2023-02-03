@@ -11,6 +11,7 @@ using TodoListSofka1.Models;
 using System.Text.Json.Serialization;
 using System.Text;
 using Azure;
+using System.Security.Cryptography;
 
 namespace TodoListSofka.Controllers
 {
@@ -145,6 +146,8 @@ namespace TodoListSofka.Controllers
 			try
 			{
 				var response = await client.PostAsync(url, content);
+				Calendario.Instance.Dia = eventoDto.Dia;
+				Tareas.Instance.notificarEvento("Crear");
 				return Ok(jsonString);
 			}catch(Exception ex)
 			{
@@ -207,7 +210,7 @@ namespace TodoListSofka.Controllers
 			{
 				var response = await client.PutAsync(url, content);
 				Calendario.Instance.Dia = dia;
-				Tareas.Instance.notificarEvento();
+				Tareas.Instance.notificarEvento("Actualizar");
 				return Ok(jsonString);
 			}
 			catch (DbUpdateConcurrencyException ex)

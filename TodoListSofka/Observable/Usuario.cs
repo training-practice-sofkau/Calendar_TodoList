@@ -23,6 +23,11 @@ namespace TodoListSofka1.Observable
 			Console.WriteLine("Se ha actualizado la tarea del dia {0}",Calendario.Instance.Dia);
 		}
 
+		public void Create()
+		{
+			Console.WriteLine("Se creado una nueva tarea el dia {0}", Calendario.Instance.Dia);
+		}
+
 		public string Name
 		{
 			get { return name; }
