@@ -30,12 +30,12 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Calendars.Where(x => !x.IsDeleted).ToListAsync();
-                if(item.IsNullOrEmpty())
+                var items = await _context.Calendars.Where(x => !x.IsDeleted).Include(r => r.Days.Where(s=> !s.IsDeleted)).ToListAsync();
+                if(items.IsNullOrEmpty())
                 {
-                    return NotFound(new {code = 404, message = "No hay items para mostrar"});
+                    return NotFound(new {code = 404, message = "No hay Calendarios para mostrar"});
                 }
-                return Ok(item);
+                return Ok(items);
             }
             catch(Exception ex)
             {
@@ -63,7 +63,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Calendars.Where(x => x.Id == id && !x.IsDeleted).ToListAsync();
+                var item = await _context.Calendars.Where(x => x.Id == id && !x.IsDeleted).Include(r => r.Days.Where(s => !s.IsDeleted)).ToListAsync();
                 if (item.IsNullOrEmpty())
                 {
                     return BadRequest(new { code = 404, message = "No hay calendarios para mostrar con ese id" });

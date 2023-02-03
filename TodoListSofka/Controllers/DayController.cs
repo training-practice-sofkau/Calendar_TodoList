@@ -27,8 +27,8 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Days.Where(x=> !x.IsDeleted).ToListAsync();
-                if(item.IsNullOrEmpty())
+                var item = await _context.Days.Where(x=> !x.IsDeleted).Include(r => r.Todoitems.Where(s => s.State && !s.IsCompleted)).ToListAsync();
+                if (item.IsNullOrEmpty())
                 {
                     return NotFound(new { code = 404, message = "No hay items para mostrar" });
                 }
@@ -90,7 +90,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Days.Where(x => x.Id == id && !x.IsDeleted).ToListAsync();
+                var item = await _context.Days.Where(x => x.Id == id && !x.IsDeleted).Include(r => r.Todoitems.Where(s => s.State && !s.IsCompleted)).ToListAsync();
                 if (item.IsNullOrEmpty())
                 {
                     return BadRequest(new { code = 404, message = "No hay días para mostrar con ese id" });
