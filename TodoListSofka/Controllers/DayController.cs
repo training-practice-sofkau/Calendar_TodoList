@@ -86,7 +86,7 @@ namespace TodoListSofka.Controllers
         //Get por id
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> GetItem([FromRoute] Guid id)
+        public async Task<IActionResult> GetIDay([FromRoute] Guid id)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace TodoListSofka.Controllers
         //Eliminado Logico 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteDay([FromRoute] Guid id)
         {
             try
             {

@@ -54,5 +54,49 @@ namespace TodoListSofka.Controllers
             return Ok(calendar);
         }
 
+        //Get por id
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetCalendar([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Calendars.Where(x => x.Id == id && !x.IsDeleted).ToListAsync();
+                if (item.IsNullOrEmpty())
+                {
+                    return BadRequest(new { code = 404, message = "No hay calendarios para mostrar con ese id" });
+                }
+
+                return Ok(item.First());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el calendario: {e.Message}" });
+            }
+        }
+
+        //Eliminado Logico 
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteCalendar([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Calendars.FindAsync(id); //Agregar filtro LINQ
+                if (item != null)
+                {
+                    item.IsDeleted = true;
+                    await _context.SaveChangesAsync();
+                    return Ok(item);
+                }
+
+                return BadRequest(new { code = 404, message = "No hay calendarios para eliminar con ese id" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede eliminar el calendario: {e.Message}" });
+            }
+        }
+
     }
 }
