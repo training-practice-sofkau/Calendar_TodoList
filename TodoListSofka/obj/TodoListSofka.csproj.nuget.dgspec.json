@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\TodoListSofka.csproj": {}
+    "C:\\Users\\57318\\Desktop\\Liga Sofka\\Semana2\\Calendar_TodoList\\TodoListSofka\\TodoListSofka.csproj": {}
   },
   "projects": {
-    "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\TodoListSofka.csproj": {
+    "C:\\Users\\57318\\Desktop\\Liga Sofka\\Semana2\\Calendar_TodoList\\TodoListSofka\\TodoListSofka.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\TodoListSofka.csproj",
+        "projectUniqueName": "C:\\Users\\57318\\Desktop\\Liga Sofka\\Semana2\\Calendar_TodoList\\TodoListSofka\\TodoListSofka.csproj",
         "projectName": "TodoListSofka",
-        "projectPath": "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\TodoListSofka.csproj",
-        "packagesPath": "C:\\Users\\adryan.ynfante\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\adryan.ynfante\\source\\repos\\backend\\TodoListSofka\\TodoListSofka\\obj\\",
+        "projectPath": "C:\\Users\\57318\\Desktop\\Liga Sofka\\Semana2\\Calendar_TodoList\\TodoListSofka\\TodoListSofka.csproj",
+        "packagesPath": "C:\\Users\\57318\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\57318\\Desktop\\Liga Sofka\\Semana2\\Calendar_TodoList\\TodoListSofka\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\adryan.ynfante\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\57318\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,8 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://scpackages.azurewebsites.net/nuget": {}
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -45,6 +45,22 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
