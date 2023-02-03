@@ -48,17 +48,25 @@ namespace TodoListSofka.Controllers
                 var item = await _context.Calendars.Where(x => x.Name == dto.Name).Include(r => r.Days).ToListAsync();
                 if(!item.IsNullOrEmpty())
                 {
-                    var days = item.First().Days.Where(x=> x.NumberDay == dto.NumberDay);
-                    if (days.IsNullOrEmpty())
+
+                    if(dto.NumberDay > 0 && dto.NumberDay < 29)
                     {
-                        Day day = new Day { NumberDay = dto.NumberDay, IdCalendar = item.First().Id };
-                        await _context.AddAsync(day);
-                        await _context.SaveChangesAsync();
-                        return Ok(new {code = 200, message = $"El Día {day.NumberDay} se agregó a {dto.Name} con éxito"});
+                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay);
+                        if (days.IsNullOrEmpty())
+                        {
+                            Day day = new Day { NumberDay = dto.NumberDay, IdCalendar = item.First().Id };
+                            await _context.AddAsync(day);
+                            await _context.SaveChangesAsync();
+                            return Ok(new { code = 200, message = $"El Día {day.NumberDay} se agregó a {dto.Name} con éxito" });
+                        }
+                        else
+                        {
+                            return BadRequest(new { code = 400, message = $"El día {dto.NumberDay} ya existe en el mes de {dto.Name}" });
+                        }
                     }
                     else
                     {
-                        return BadRequest(new {message = $"El día {dto.NumberDay} ya existe en el mes de {dto.Name}" });
+                        return BadRequest(new { code = 400, message = $"El día {dto.NumberDay} no es un número valido para agregar en el calendario"});
                     }
                 }
                 else
