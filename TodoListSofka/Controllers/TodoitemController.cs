@@ -11,7 +11,7 @@ namespace TodoListSofka.Controllers
     [Route("api/[controller]")]
     public class TodoitemController : Controller
     {
-        private CalendardbContext _context;
+        private readonly CalendardbContext _context = CalendardbContext.Instance;
         private readonly IMapper _mapper;
 
 

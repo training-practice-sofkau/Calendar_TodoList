@@ -13,7 +13,7 @@ namespace TodoListSofka.Controllers
     public class CalendarController : Controller
     {
 
-        private readonly CalendardbContext _context;
+        private readonly CalendardbContext _context = CalendardbContext.Instance;
         private readonly IMapper _mapper;
 
         public CalendarController(CalendardbContext context, IMapper mapper)
