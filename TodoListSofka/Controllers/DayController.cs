@@ -20,6 +20,7 @@ namespace TodoListSofka.Controllers
             _mapper= mapper;
         }
 
+        //Metodo que lista los días de un calendario
         [HttpGet]
         [Route("getDays/")]
         public async Task<IActionResult> GetDays()
@@ -40,6 +41,8 @@ namespace TodoListSofka.Controllers
             }
         }
 
+
+        //Metodo que agrega un día a un calendario basandose en el mes de febrero, no debería guardar días mayores a 28 ni repetidos
         [HttpPost]
         public async Task<IActionResult> AddDay(AddDayDTO dto)
         {

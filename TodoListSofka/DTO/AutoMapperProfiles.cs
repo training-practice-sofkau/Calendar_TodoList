@@ -8,6 +8,9 @@ namespace TodoListSofka.DTO
         public AutoMapperProfiles() {
 
             CreateMap<Calendar, CalendarDTO>().ReverseMap();
+
+            //Agregar un Item
+            CreateMap<AddItemDTO, Todoitem>();
         }
     }
 }

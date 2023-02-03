@@ -18,7 +18,7 @@ public partial class Todoitem
 
     [Required] public bool State { get; set; } = true; 
 
-    public Guid IdDay { get; set; }
+    [Required] public Guid IdDay { get; set; }
 
     public virtual Day IdDayNavigation { get; set; } = null!;
 }

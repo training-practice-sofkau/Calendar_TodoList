@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TodoListSofka.DTO;
 using TodoListSofka.Model;
 
 namespace TodoListSofka.Controllers
@@ -36,6 +37,56 @@ namespace TodoListSofka.Controllers
             catch (Exception e)
             {
                 return BadRequest(new { code = 500, message = $"No se puede listar: {e.Message}" });
+            }
+        }
+
+        //Metodo post que agrega un evento a un día específico, de no existir se crea ese día en el calendario
+        [HttpPost]
+        public async Task<IActionResult> AddItem(AddItemDTO dto)
+        {
+            try
+            {
+                var item = await _context.Calendars.Where(x => x.Name == dto.NameCalendar).Include(r => r.Days).ToListAsync();
+                if (!item.IsNullOrEmpty())
+                {
+
+                    if (dto.NumberDay > 0 && dto.NumberDay < 29)
+                    {
+                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay);
+                        if (days.IsNullOrEmpty())
+                        {
+                            Day day = new Day { NumberDay = dto.NumberDay, IdCalendar = item.First().Id };
+                            await _context.AddAsync(day);
+                            await _context.SaveChangesAsync();
+                            Todoitem result = _mapper.Map<Todoitem>(dto);
+                            result.IdDay = day.Id;
+                            await _context.AddAsync(result);
+                            await _context.SaveChangesAsync();
+                            return Ok(new { code = 200, message = $"El Evento {result.Title} se agregó al día {dto.NumberDay} del calendario {dto.NameCalendar} con éxito" });
+                        }
+                        else
+                        {
+                            Todoitem result = _mapper.Map<Todoitem>(dto);
+                            result.IdDay = days.First().Id;
+                            await _context.AddAsync(result);
+                            await _context.SaveChangesAsync();
+                            return Ok(new { code = 200, message = $"El Evento {result.Title} se agregó al día {dto.NumberDay} del calendario {dto.NameCalendar} con éxito" });
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest(new { code = 400, message = $"El día {dto.NumberDay} no es un número valido para agregar en el calendario" });
+                    }
+                }
+                else
+                {
+                    return NotFound(new { code = 404, message = "No existe un calendario con ese nombre" });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el item: {ex.Message}" });
             }
         }
 
