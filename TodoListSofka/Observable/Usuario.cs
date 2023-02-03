@@ -6,21 +6,21 @@ namespace TodoListSofka1.Observable
 	public class Usuario: IObserver
 	{
 		private string name;
-		public Usuario() { }
 
-		public Usuario(string name)
+		public Usuario (string name)
 		{
-			Name = name;
+			this.name = name;
 		}
+		public Usuario() { }
 
 		public void Unsubscribe(Usuario usuario)
 		{
 			Calendario.Instance.Unsubscribe(usuario);
 		}
 
-		public void Update(Calendario tarea)
+		public void Update()
 		{
-			Console.WriteLine("El nombre del inversor es: {0}", Calendario.Instance.Dia);
+			Console.WriteLine("Se ha actualizado la tarea del dia {0}",Calendario.Instance.Dia);
 		}
 
 		public string Name

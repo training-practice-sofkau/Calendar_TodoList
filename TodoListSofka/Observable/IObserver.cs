@@ -4,7 +4,7 @@ namespace TodoListSofka1.Observable
 {
 	public interface IObserver
 	{
-		void Update(Calendario tareas);
+		void Update();
 		void Unsubscribe(Usuario usuario);
 	}
 }

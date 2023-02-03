@@ -118,6 +118,13 @@ namespace TodoListSofka.Controllers
 			}
 		}
 
+		[HttpPost("/Agregar/Usuarios")]
+		public async Task<Object> PostUsuarios(CrearCalendarioDto eventoDto)
+		{
+			Tareas.Instance.crearUsuarios();
+			return Ok("Usuarios creados");
+		}
+
 		[HttpPut("/Dia/{dia}/Tarea/{idTarea}")]
 		public async Task<Object> Put(int dia, int idTarea, TareaDto data)
 		{
@@ -165,6 +172,8 @@ namespace TodoListSofka.Controllers
 			try
 			{
 				var response = await client.PutAsync(url, content);
+				Calendario.Instance.Dia = dia;
+				Tareas.Instance.notificarEvento();
 				return Ok(jsonString);
 			}
 			catch (DbUpdateConcurrencyException ex)
