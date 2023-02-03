@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TodoListSofka.DTO;
 using TodoListSofka.Model;
 
 namespace TodoListSofka.Controllers
@@ -12,10 +14,12 @@ namespace TodoListSofka.Controllers
     {
 
         private readonly CalendardbContext _context;
+        private readonly IMapper _mapper;
 
-        public CalendarController(CalendardbContext context)
+        public CalendarController(CalendardbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Calendars
@@ -36,6 +40,17 @@ namespace TodoListSofka.Controllers
             {
                 return BadRequest(new { code = 500, message = $"No se puede listar: {ex.Message}" });
             }
+        }
+
+        //POST: Calendar
+        [HttpPost]
+        public async Task<IActionResult> AddCalendar(CalendarDTO dto)
+        {
+            Calendar calendar = _mapper.Map<Calendar>(dto);
+            await _context.AddAsync(calendar);
+            await _context.SaveChangesAsync();
+
+            return Ok(calendar);
         }
 
     }
