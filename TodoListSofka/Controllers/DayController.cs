@@ -48,13 +48,13 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Calendars.Where(x => x.Name == dto.Name).Include(r => r.Days).ToListAsync();
+                var item = await _context.Calendars.Where(x => x.Name == dto.Name && !x.IsDeleted).Include(r => r.Days).ToListAsync();
                 if(!item.IsNullOrEmpty())
                 {
 
                     if(dto.NumberDay > 0 && dto.NumberDay < 29)
                     {
-                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay);
+                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay && !x.IsDeleted);
                         if (days.IsNullOrEmpty())
                         {
                             Day day = new Day { NumberDay = dto.NumberDay, IdCalendar = item.First().Id };
@@ -82,5 +82,51 @@ namespace TodoListSofka.Controllers
                 return BadRequest(new { code = 500, message = $"No se puede mostrar el item: {ex.Message}" });
             }
         }
+
+        //Get por id
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetItem([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Days.Where(x => x.Id == id && !x.IsDeleted).ToListAsync();
+                if (item.IsNullOrEmpty())
+                {
+                    return BadRequest(new { code = 404, message = "No hay días para mostrar con ese id" });
+                }
+
+                return Ok(item.First());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el día: {e.Message}" });
+            }
+        }
+
+
+        //Eliminado Logico 
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Days.FindAsync(id); //Agregar filtro LINQ
+                if (item != null)
+                {
+                    item.IsDeleted = true;
+                    await _context.SaveChangesAsync();
+                    return Ok(item);
+                }
+
+                return BadRequest(new { code = 404, message = "No hay días para eliminar con ese id" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede eliminar el día: {e.Message}" });
+            }
+        }
+
     }
 }

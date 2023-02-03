@@ -46,13 +46,13 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var item = await _context.Calendars.Where(x => x.Name == dto.NameCalendar).Include(r => r.Days).ToListAsync();
+                var item = await _context.Calendars.Where(x => x.Name == dto.NameCalendar && !x.IsDeleted).Include(r => r.Days).ToListAsync();
                 if (!item.IsNullOrEmpty())
                 {
 
                     if (dto.NumberDay > 0 && dto.NumberDay < 29)
                     {
-                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay);
+                        var days = item.First().Days.Where(x => x.NumberDay == dto.NumberDay && !x.IsDeleted);
                         if (days.IsNullOrEmpty())
                         {
                             Day day = new Day { NumberDay = dto.NumberDay, IdCalendar = item.First().Id };
@@ -132,8 +132,8 @@ namespace TodoListSofka.Controllers
             {
                 return BadRequest(new { code = 500, message = $"No se puede mostrar el item: {e.Message}" });
             }
-
         }
+
 
         //Metodo para indicar que la tarea se completó
         [HttpPut]
