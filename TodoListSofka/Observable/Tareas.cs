@@ -1,6 +1,6 @@
 ﻿namespace TodoListSofka1.Logica
 {
-	public class Tareas : Calendario
+	public class Tareas
 	{
 		private static Tareas instance = null;
 
@@ -13,6 +13,7 @@
 				return instance;
 			}
 		}
+
 
 		public void updateCalendario()
 		{
