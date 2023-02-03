@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using System.Net;
-using TodoListSofka.DTO;
+using TodoListSofka.DTO.ToDoItem;
 using TodoListSofka.Model;
 
 namespace TodoListSofka.Controllers
