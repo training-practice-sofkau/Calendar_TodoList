@@ -8,6 +8,8 @@ namespace TodoListSofka.Data
     {
         public DbSet<TodoItem> ListaTareas1 { get; set; }
 
+        public DbSet<Day> Dias { get; set; }
+
         public ToDoAPIDbContext(DbContextOptions options) : base(options)
         {
         }

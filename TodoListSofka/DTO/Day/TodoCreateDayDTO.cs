@@ -4,8 +4,8 @@ namespace TodoListSofka.DTO.Day
 {
     public class TodoCreateDayDTO
     {
-        public ToDoCreateDTO ToDoCreateDTO { get; set; }
+        public string dayNumber { get; set; }
 
-        public List<TodoItem> todoItems { get; set; }
+        public string dayWeek { get; set; }
     }
 }
