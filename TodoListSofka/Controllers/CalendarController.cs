@@ -21,6 +21,8 @@ namespace TodoListSofka.Controllers
 		private readonly CalendarApiDbContext dbContext;
 		static HttpClient client = new HttpClient();
 		JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+		List<int> listaFiltrada = new List<int>();
+		List<TareaModel> ListaTareas = new List<TareaModel>();
 
 		public CalendarController(CalendarApiDbContext dbContext)
 		{
@@ -30,11 +32,28 @@ namespace TodoListSofka.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetDias()
 		{
+			int bandera = 0;
 			//Busca las Tareas que no hayan sido eliminados y los retorna
-			var tareaActiva = dbContext.Eventos_Calendario.Where(r =>r.Id != 0 && r.Tareas.Count != 0).Include(r => r.Tareas).ToList();
-			return Ok(tareaActiva);
-
+			var tareaActiva = dbContext.Eventos_Calendario.Where(r => r.Id != 0 && r.Tareas.Count != 0).Include(r => r.Tareas).ToList();
+			
+			foreach (var item in tareaActiva)
+			{
+				foreach (var item1 in item.Tareas)
+				{
+					if (item1.State)
+					{
+						bandera++;
+					}
+				}
+				if (bandera > 0)
+				{
+					listaFiltrada.Add(item.Dia);
+					bandera = 0;
+				}
+			}
+			return Ok(listaFiltrada);
 		}
+
 
 		[HttpGet("api/tareas")]
 		public async Task<IActionResult> GetTareas()
@@ -62,8 +81,23 @@ namespace TodoListSofka.Controllers
 				}
 				else
 				{
-					return Ok(tarea);
+					foreach (var item in tarea)
+					{
+						foreach(var item1 in item.Tareas)
+						{
+							if (item1.State)
+							{
+								ListaTareas.Add(item1);
+							}
+						}
+					}
 				}
+				if (ListaTareas.Count == 0)
+				{
+					return BadRequest("No hay tareas para este dia. ");
+				}
+				return Ok(ListaTareas);
+				
 			}
 			catch (Exception ex)
 			{
@@ -188,6 +222,7 @@ namespace TodoListSofka.Controllers
 		{
 			var url = "https://localhost:7281/api/ToDo/"+idTarea;
 			int idDia;
+			TareaModel tareaEliminada = new TareaModel();
 			bool ban = false;
 
 			if ( dia == 0 || idTarea == 0)
@@ -205,6 +240,7 @@ namespace TodoListSofka.Controllers
 					if (item1.Id == idTarea)
 					{
 						ban = true;
+						tareaEliminada = item1;
 					}
 				}
 			}
@@ -214,7 +250,7 @@ namespace TodoListSofka.Controllers
 				if (ban)
 				{
 					var response = await client.DeleteAsync(url);
-					return Ok();
+					return Ok(tareaEliminada);
 				}
 				else
 				{
