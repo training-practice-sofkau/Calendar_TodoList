@@ -12,12 +12,12 @@ namespace TodoListSofka.Controllers
     public class ToDoController : ControllerBase
     {
 
-        private readonly ToDoAPIDbContext dbContext;
+         private readonly ToDoAPIDbContext dbContext;
 
-        public ToDoController(ToDoAPIDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+         public ToDoController(ToDoAPIDbContext dbContext)
+         {
+             this.dbContext = dbContext;
+         }        
 
         [HttpGet]
         public async Task<IActionResult> GetPersonajes()
@@ -68,14 +68,14 @@ namespace TodoListSofka.Controllers
             nuevaTarea.Priority = tareaDto.Priority;
             nuevaTarea.IsCompleted = tareaDto.IsCompleted;
             nuevaTarea.State = true;
-            nuevaTarea.FechaEntrega = tareaDto.dateTime;
+            nuevaTarea.FechaEntrega = tareaDto.FechaEntrega;
 
             dbContext.Add(nuevaTarea);
             await dbContext.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpGet("/FechaEvento")]
+        /*[HttpGet("/FechaEvento")]
         public async Task<Object> PostEvento(TodoCreateDayDTO todoCreateDayDTO)
         {
             var nuevoEvento = new TodoCreateDayDTO();
@@ -86,7 +86,7 @@ namespace TodoListSofka.Controllers
             await dbContext.SaveChangesAsync();
             return Ok();
             
-        }
+        }*/
 
         [HttpPut]
         public async Task<Object> Put(ToDoUpdateDto itemData)

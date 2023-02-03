@@ -13,6 +13,7 @@ namespace TodoListSofka.Data
         public ToDoAPIDbContext(DbContextOptions options) : base(options)
         {
         }
+               
 
         public override int SaveChanges()
         {
@@ -26,6 +27,7 @@ namespace TodoListSofka.Data
 
             return base.SaveChanges();
         }
+               
     
     }
 }
