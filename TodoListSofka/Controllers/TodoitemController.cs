@@ -135,5 +135,51 @@ namespace TodoListSofka.Controllers
 
         }
 
+        //Metodo para indicar que la tarea se completó
+        [HttpPut]
+        [Route("updateComplete/{id:Guid}")]
+        public async Task<IActionResult> CompleteItem([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Todoitems.Where(x => x.Id == id && x.State).ToListAsync();
+
+                if (!item.IsNullOrEmpty())
+                {
+                    item[0].IsCompleted = true;
+                    await _context.SaveChangesAsync();
+                    return Ok(item);
+                }
+                return BadRequest(new { code = 404, message = "No hay items para actualizar con ese id" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede actualizar el item: {e.Message}" });
+            }
+        }
+
+        //Eliminado Logico 
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteItem([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Todoitems.FindAsync(id); //Agregar filtro LINQ
+                if (item != null)
+                {
+                    item.State = false;
+                    await _context.SaveChangesAsync();
+                    return Ok(item);
+                }
+
+                return BadRequest(new { code = 404, message = "No hay items para eliminar con ese id" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede eliminar el item: {e.Message}" });
+            }
+        }
+
     }
 }
