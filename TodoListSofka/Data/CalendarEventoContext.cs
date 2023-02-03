@@ -53,6 +53,9 @@ public partial class CalendarEventoContext : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.Jornada)
+                .HasMaxLength(10)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);

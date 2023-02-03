@@ -19,7 +19,7 @@ public partial class FechaModel
 
     public Guid IdEventos { get; set; }
     public FechaModel(Guid id, DateTime fecha, int dia, int mes,
-            int año, bool state)
+            int año, bool state, Guid idEventos)
     {
         Id = id;
         Fecha = fecha;
@@ -27,6 +27,7 @@ public partial class FechaModel
         Mes = mes;
         Año = año;
         State = state;
+        IdEventos = idEventos;
     }
     public virtual TareaModel IdEventosNavigation { get; set; } = null!;
     public FechaModel() { }

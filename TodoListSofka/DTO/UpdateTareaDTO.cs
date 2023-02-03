@@ -6,5 +6,6 @@ namespace TodoListSofka.DTO
     {
         public string Nombre { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
+        public string Jornada { get; set; } = null!;
     }
 }
