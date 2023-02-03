@@ -90,5 +90,50 @@ namespace TodoListSofka.Controllers
             }
         }
 
+        //Get por id
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetItem([FromRoute] Guid id)
+        {
+            try
+            {
+                var item = await _context.Todoitems.Where(x => x.Id == id && x.State && !x.IsCompleted).ToListAsync();
+                if (item.IsNullOrEmpty())
+                {
+                    return BadRequest(new { code = 404, message = "No hay items para mostrar con ese id" });
+                }
+
+                return Ok(item[0]);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el item: {e.Message}" });
+            }
+        }
+
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateItem([FromRoute] Guid id, TodoitemDTO dto)
+        {
+            try
+            {
+                var item = await _context.Todoitems.Where(x => x.Id == id && x.State).ToListAsync();
+                if (!item.IsNullOrEmpty())
+                {
+                    _mapper.Map(dto, item[0]);
+                    await _context.SaveChangesAsync();
+                    return Ok(item[0]);
+                }
+
+                return BadRequest(new { code = 404, message = "No hay items para actualizar con ese id" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el item: {e.Message}" });
+            }
+
+        }
+
     }
 }

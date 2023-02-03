@@ -11,6 +11,9 @@ namespace TodoListSofka.DTO
 
             //Agregar un Item
             CreateMap<AddItemDTO, Todoitem>();
+
+            //Actualizar un Item
+            CreateMap<TodoitemDTO, Todoitem>().ReverseMap();
         }
     }
 }
