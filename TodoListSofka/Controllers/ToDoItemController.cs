@@ -1,29 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using TodoListSofka.Data;
 using TodoListSofka.Model;
-using TodoListSofka.DTO;
-using AutoMapper;
 using TodoListSofka.PatternDesign;
+using TodoListSofka.DTO.ToDoItem;
 
 namespace TodoListSofka.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ToDoListController : Controller
+    [Route("[controller]")]
+    public class ToDoListController : CalendarController
     {
         //creamos una variable del contexto
-        private readonly DatabaseFirstBloggingContext dbContext;
+        readonly CalendarToDoContext _dbContext;
         private readonly IMapper _mapper;
-
-        public ToDoListController(DatabaseFirstBloggingContext dbContext, IMapper mapper)
+        public ToDoListController(CalendarToDoContext dbContext, IMapper mapper) : base(dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
+
         //Se traen todos los items
-        [HttpGet("AllItems/Get")]
+        [HttpGet("AllItems")]
         public async Task<IActionResult> GetAllItems()
         {
             try
@@ -40,7 +40,7 @@ namespace TodoListSofka.Controllers
                 //                    IsCompleted = item.IsCompleted
                 //                };
 
-                var toDoItems = await dbContext.ToDoItems.Where(list => list.State).ToListAsync();
+                var toDoItems = await _dbContext.ToDoItems.Where(list => list.State).ToListAsync();
 
                 //Creamos la instancia del creador de listas (Singleton Pattern)
                 CreatorList listMapped = CreatorList.GetInstance();
@@ -63,19 +63,19 @@ namespace TodoListSofka.Controllers
         }
 
         //Se traen todos los items sin completar
-        [HttpGet("UncompleteItems/Get")]
+        [HttpGet("UncompleteItems")]
         public async Task<IActionResult> GetUncompleteItems()
         {
             try
             {
                 //consulta a la db mediante linq + DTO para get de elementos sin completar
 
-                var toDoItems = await dbContext.ToDoItems.Where(list => list.State && !list.IsCompleted)
+                var toDoItems = await _dbContext.ToDoItems.Where(list => list.State && !list.IsCompleted)
                     .ToListAsync();
 
                 //Creamos la instancia del creador de listas (Singleton Pattern)
                 CreatorList listMapped = CreatorList.GetInstance();
-                
+
                 if (toDoItems.Count != 0 && toDoItems != null)
                 {
                     //vaciar la lista cada vez que "cree" la instancia para usarla
@@ -95,13 +95,13 @@ namespace TodoListSofka.Controllers
         }
 
         //Se trae un item
-        [HttpGet("{id:guid}/Get")]
+        [HttpGet("ToDoItem/{id:guid}")]
         public async Task<IActionResult> GetUniqueItem([FromRoute] Guid id)
         {
             try
             {
                 //Get de un item con LINQ + DTO
-                var toDoItems = from item in dbContext.ToDoItems
+                var toDoItems = from item in _dbContext.ToDoItems
                                 where item.State && item.ItemId == id
                                 select new GetToDoItemDTO()
                                 {
@@ -125,20 +125,29 @@ namespace TodoListSofka.Controllers
 
         //Añadir items con DTO
         [HttpPost]
-        public async Task<IActionResult> AddItem(AddToDoItemDTO addToDoItemDTO)
+        public async Task<IActionResult> AddItem(AddToDoItemDTO addToDoItemDTO, int day)
         {
             try
             {
-                var ToDoItem = _mapper.Map<ToDoItem>(addToDoItemDTO);
+                var getDay = await _dbContext.Calendars.FindAsync(day);
+                if (getDay == null)
                 {
+                    await AddDay(day);
+                    await _dbContext.SaveChangesAsync();
+                }
+                var ToDoItem = new ToDoItem();
+                {
+                    ToDoItem.Title = addToDoItemDTO.Title;
+                    ToDoItem.Description = addToDoItemDTO.Description;
+                    ToDoItem.Responsible = addToDoItemDTO.Responsible;
                     ToDoItem.IsCompleted = false;
                     ToDoItem.State = true;
+                    ToDoItem.IndexDay = day;
                 };
 
-                await dbContext.ToDoItems.AddAsync(ToDoItem);
-                await dbContext.SaveChangesAsync();
-
-                return Ok(ToDoItem);
+                await _dbContext.ToDoItems.AddAsync(ToDoItem);
+                await _dbContext.SaveChangesAsync();
+                return Ok($"Se creo la tarea: {ToDoItem.Title}");
             }
             catch (Exception e)
             {
@@ -147,12 +156,12 @@ namespace TodoListSofka.Controllers
         }
 
         //Actulizar item completo DTO
-        [HttpPut("{id:guid}/UpdateAll")]
+        [HttpPut("UpdateItemAll/{id:guid}")]
         public async Task<IActionResult> UpdateAllItem([FromRoute] Guid id, UpdateToDoItemDTO updateToDoItemDTO)
         {
             try
             {
-                var ToDoItem = await dbContext.ToDoItems.Where(list => list.State && list.ItemId == id)
+                var ToDoItem = await _dbContext.ToDoItems.Where(list => list.State && list.ItemId == id)
                     .ToListAsync();
 
                 if (ToDoItem.Count != 0 && ToDoItem != null)
@@ -164,7 +173,7 @@ namespace TodoListSofka.Controllers
                         item.Responsible = updateToDoItemDTO.Responsible;
                         item.IsCompleted = updateToDoItemDTO.IsCompleted;
                     }
-                    await dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                     return Ok(ToDoItem);
                 }
                 return BadRequest(new { code = 404, message = "No hay un elemento con este id" });
@@ -176,12 +185,12 @@ namespace TodoListSofka.Controllers
         }
 
         //Actulizar el IsCompleted DTO
-        [HttpPut("{id:guid}/UpdateIsCompleted")]
+        [HttpPut("UpdateIsCompleted/{id:guid}")]
         public async Task<IActionResult> UpdateIsCompleted([FromRoute] Guid id, bool isCompleted)
         {
             try
             {
-                var ToDoItem = await dbContext.ToDoItems.Where(list => list.State && !list.IsCompleted && list.ItemId == id)
+                var ToDoItem = await _dbContext.ToDoItems.Where(list => list.State && !list.IsCompleted && list.ItemId == id)
                     .ToListAsync();
 
                 if (ToDoItem.Count != 0 && ToDoItem != null)
@@ -190,7 +199,7 @@ namespace TodoListSofka.Controllers
                     {
                         item.IsCompleted = isCompleted;
                     }
-                    await dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                     return Ok(ToDoItem);
                 }
                 return BadRequest(new { code = 404, message = "No hay un elemento con este id" });
@@ -207,7 +216,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var ToDoItem = await dbContext.ToDoItems.Where(list => list.State && list.ItemId == id)
+                var ToDoItem = await _dbContext.ToDoItems.Where(list => list.State && list.ItemId == id)
                     .ToListAsync();
 
                 if (ToDoItem.Count != 0 && ToDoItem != null)
@@ -216,7 +225,7 @@ namespace TodoListSofka.Controllers
                     {
                         item.State = false;
                     }
-                    await dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                     return Ok(ToDoItem);
                 }
                 return BadRequest(new { code = 404, message = "No hay un elemento con este id" });
