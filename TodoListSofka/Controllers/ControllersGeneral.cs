@@ -29,6 +29,7 @@ namespace TodoListSofka.Controllers
             {
                 var Tarea = _mapper.Map<TareaModel>(AddFechaTareaDTO.AddTareaDTO);
                 {
+                    Tarea.Id = new Guid();
                     Tarea.State = true;
                 }
 
@@ -38,6 +39,7 @@ namespace TodoListSofka.Controllers
                 var Fechas = _mapper.Map<FechaModel>(AddFechaTareaDTO.AddFechaDTO);
                 {
                     var Fecha = Fechas.Fecha;
+                    Fechas.Id = new Guid();
                     Fechas.Dia = Fecha.Day;
                     Fechas.Mes = Fecha.Month;
                     Fechas.Año = Fecha.Year;
@@ -126,7 +128,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var Tareas = await dbContext.Tareas.Where(list => list.Jornada == "Diurno").ToListAsync();
+                var Tareas = await dbContext.Tareas.Where(list => list.Jornada == "Mañana").ToListAsync();
 
                 //Creamos la instancia del creador de listas (Singleton Pattern)
                 CreatorList listMapped2 = CreatorList.GetInstance();
@@ -155,7 +157,7 @@ namespace TodoListSofka.Controllers
         {
             try
             {
-                var Tareas = await dbContext.Tareas.Where(list => list.Jornada == "Nocturno").ToListAsync();
+                var Tareas = await dbContext.Tareas.Where(list => list.Jornada == "Tarde").ToListAsync();
 
                 //Creamos la instancia del creador de listas (Singleton Pattern)
                 CreatorList listMapped2 = CreatorList.GetInstance();
