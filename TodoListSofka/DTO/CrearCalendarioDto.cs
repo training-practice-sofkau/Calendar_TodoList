@@ -5,7 +5,7 @@ namespace TodoListSofka1.DTO
 {
 	public class CrearCalendarioDto
 	{
-		[Required] public int Dia { get; set; }
+		[Required][Range(1, 28, ErrorMessage = "El dia debe ser un numero entre 1 y 28")] public int Dia { get; set; }
 		[Required] public string Title { get; set; } = null!;
 		[Required] public string Description { get; set; } = null!;
 		[Required] public string Responsible { get; set; } = null!;

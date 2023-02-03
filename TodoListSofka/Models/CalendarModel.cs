@@ -6,7 +6,7 @@ namespace TodoListSofka1.Models
 	public class CalendarModel
 	{
 		[Required]public int Id { get; set; }
-		[Required]public int Dia { get; set; }
+		[Required][Range(1, 28, ErrorMessage = "El dia debe ser un numero entre 1 y 28")] public int Dia { get; set; }
 
 		public int Mes { get; set; } = 02;
 
