@@ -18,6 +18,7 @@ namespace TodoListSofka.Dto
         public bool IsCompleted { get; set; }
 
         [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
+        [Range(1,28)]
         public int? IdCalendar { get; set; }
 
     }
