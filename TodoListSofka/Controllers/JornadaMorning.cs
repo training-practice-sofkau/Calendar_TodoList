@@ -8,10 +8,9 @@ namespace TodoListSofka.Controllers
     {
        
         public Object ShowJornada(Item taskCompleted){
-            
+
             string jornada = "mañana";
             Day daycomplete = new Day(taskCompleted.Title, taskCompleted.IdCalendar, jornada);
-
             return daycomplete;
         }
     }

@@ -8,22 +8,13 @@ namespace TodoListSofka.Controllers
         public int numberDay;
         public string jorn;
 
-        public string Name { get => name; set => name = value; }
-        public int NumberDay { get => numberDay; set => numberDay = value; }
-        public string Jorn { get => jorn; set => jorn = value; }
-
         public Day(string name, int? numberDay, string jorn)
         {
             this.name = name;
             this.numberDay = (int)numberDay;
             this.jorn = jorn;
         }
-
-        public override string? ToString()
-        {
-            return $" la tarea con nombre: {Name} Es para el {NumberDay} de febrero y es en la jornada de {Jorn}";
-        }
-
+        
         public static IJornada CreateJornada(string typeJornada)
         {
             switch (typeJornada)
@@ -49,6 +40,39 @@ namespace TodoListSofka.Controllers
 
         }
 
+        public string Name { get => name; set => name = value; }
+        public int NumberDay { get => numberDay; set => numberDay = value; }
+        public string Jorn { get => jorn; set => jorn = value; }
+
+
+        public override string? ToString()
+        {
+            return $" la tarea con nombre: {Name} Es para el {NumberDay} de febrero y es en la jornada de la {Jorn}";
+        }
+
+
+        //SINGLETON
+        /*
+        private static Day instancia;
+
+        private Day()
+        {
+
+        }
+
+        public static Day getInstance()
+        {
+
+            if (instancia == null)
+            {
+
+                instancia = new Day();
+
+            }
+            return instancia;
+
+        }
+        */
 
 
     }

@@ -10,6 +10,4 @@ public partial class Calendar
     public int NumberDaY { get; set; }
     [Required(ErrorMessage = "Por favor ingresar el dato, no dejar el dato vacio")]
     public  ICollection<Item> Items { get;} = new List<Item>();
-
-
 }

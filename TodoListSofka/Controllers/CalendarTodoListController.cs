@@ -320,8 +320,10 @@ namespace TodoListSofka.Controllers
                 if (day == null)
                 {
 
+                    
                     var calendario = new Calendar()
                     {
+                        
                         NumberDaY = dayUser
                     };
 
