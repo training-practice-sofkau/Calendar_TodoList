@@ -11,5 +11,7 @@ public partial class Calendar
 
     public string Description { get; set; } = null!;
 
+    public bool IsDeleted { get; set; }
+
     public virtual ICollection<Day> Days { get; } = new List<Day>();
 }

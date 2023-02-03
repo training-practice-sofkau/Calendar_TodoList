@@ -11,6 +11,8 @@ public partial class Day
 
     public Guid IdCalendar { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public virtual Calendar IdCalendarNavigation { get; set; } = null!;
 
     public virtual ICollection<Todoitem> Todoitems { get; } = new List<Todoitem>();
