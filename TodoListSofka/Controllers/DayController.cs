@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TodoListSofka.Data;
 using TodoListSofka.DTO;
 using TodoListSofka.DTO.Day;
@@ -16,7 +17,15 @@ namespace TodoListSofka.Controllers
         public DayController(ToDoAPIDbContext dbContext)
         {
             this.dbContext = dbContext;
-        }       
+        }
+
+        [HttpGet]
+        public async Task<object> GetDay()
+        {
+            return await dbContext.Dias.ToListAsync();
+           
+        }
+
 
 
         [HttpPost]
