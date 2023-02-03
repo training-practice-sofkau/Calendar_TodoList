@@ -79,16 +79,28 @@ namespace TodoListSofka.Controllers
         [Route("/guardar")]
         public async Task<ActionResult> PostItem(TodoitemAgregar item)
         {
+            var fecha = new Calendario()
+            {
+                Id = Guid.NewGuid(),
+                Dia = item.Dia,
+                Mes = item.Mes,
+                Anio = item.Anio,
+                Jornada = item.Jornada
+            };
+
             var items = new Todoitem()
             {
                 Title = item.Title,
                 Description = item.Description,
                 Responsible = item.Responsible,
                 IsComplete = item.IsComplete,
-                State = 1
+                State = 1,
+                IdCalendar = fecha.Id
             };
 
+            await _dbContext.Calendarios.AddAsync(fecha);
             await _dbContext.Todoitems.AddAsync(items);
+        
             await _dbContext.SaveChangesAsync();
 
             return Ok();
@@ -196,6 +208,6 @@ namespace TodoListSofka.Controllers
         }
 
 
-
+    
     }
 }
