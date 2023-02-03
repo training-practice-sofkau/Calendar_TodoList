@@ -24,8 +24,7 @@ namespace TodoListSofka.Controllers
 
         //Agrego Tareas y Fechas
         [HttpPost]
-        public async Task<IActionResult> AddFechaTarea(AddFechaTareaDTO AddFechaTareaDTO)
-        {
+        public async Task<IActionResult> AddFechaTarea(AddFechaTareaDTO AddFechaTareaDTO) { 
             try
             {
                 var Tarea = _mapper.Map<TareaModel>(AddFechaTareaDTO.AddTareaDTO);
@@ -43,9 +42,8 @@ namespace TodoListSofka.Controllers
                     Fechas.Mes = Fecha.Month;
                     Fechas.Año = Fecha.Year;
                     Fechas.State = true;
-                    Fechas.IdEventos = Tarea.Id;
-                }
 
+                };
                 if (Fechas.Dia <= 29 && Fechas.Dia > 0 && Fechas.Mes == 2)
                 {
                     await dbContext.Fechas.AddAsync(Fechas);
@@ -56,7 +54,7 @@ namespace TodoListSofka.Controllers
                     return BadRequest(new { code = 400, message = $"No se pudo añadir el elemento Digite bien la fecha" });
                 }
 
-                return Ok("Datos Guardados: " + Fechas + " " + Tarea);
+                return Ok(Fechas);
             }
             catch (Exception e)
             {
