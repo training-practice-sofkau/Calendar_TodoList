@@ -25,6 +25,7 @@ namespace TodoListSofka.Controllers
         // GET: Calendars
 
         [HttpGet]
+        [Route("getCalendars/")]
         public async Task<IActionResult> GetCalendars()
         {
             try
