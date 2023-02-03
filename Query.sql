@@ -9,8 +9,9 @@ go
 --Creo la tabla Tarea
 Create table Tareas (
 Id UNIQUEIDENTIFIER primary key not null,
-Nombre varchar(100) not null,
-Descripcion varchar(100) not null,
+Nombre varchar(100),
+Descripcion varchar(100),
+Jornada varchar(10),
 State bit not null
 )
 
@@ -31,8 +32,8 @@ Alter table Fechas Add foreign key(Id_Eventos) References Tareas(Id)
 Go
 
 --Agrego Columna a la tabla Tarea
-Alter table Tareas add Jornada varchar(10)
-go
+--Alter table Tareas add Jornada varchar(10)
+--go
 
 
 --Busqueda de datos

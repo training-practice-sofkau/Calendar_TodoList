@@ -42,6 +42,7 @@ namespace TodoListSofka.Controllers
                     Fechas.Mes = Fecha.Month;
                     Fechas.Año = Fecha.Year;
                     Fechas.State = true;
+                    Fechas.IdEventos = Tarea.Id;
 
                 };
                 if (Fechas.Dia <= 29 && Fechas.Dia > 0 && Fechas.Mes == 2)
