@@ -13,5 +13,10 @@
 				return instance;
 			}
 		}
+
+		public void updateCalendario()
+		{
+			Console.WriteLine("Tarea actualizada");
+		}
 	}
 }

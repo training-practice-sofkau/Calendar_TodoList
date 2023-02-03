@@ -174,5 +174,51 @@ namespace TodoListSofka.Controllers
 
 		}
 
+		[HttpDelete("/Dia/{dia}/Tarea/{idTarea}")]
+		public async Task<Object> Delete(int dia, int idTarea)
+		{
+			var url = "https://localhost:7281/api/ToDo/"+idTarea;
+			int idDia;
+			bool ban = false;
+
+			if ( dia == 0 || idTarea == 0)
+				return BadRequest("Datos ingresados errados. ");
+
+			var tarea = dbContext.Eventos_Calendario.Where(r => r.Dia == dia && r.Tareas.Count != 0).Include(r => r.Tareas).ToList();
+
+			if (tarea.Count == 0)
+				return BadRequest("No hay eventos programados este dia. ");
+
+			foreach (var item in tarea)
+			{
+				foreach (var item1 in item.Tareas)
+				{
+					if (item1.Id == idTarea)
+					{
+						ban = true;
+					}
+				}
+			}
+
+			try
+			{
+				if (ban)
+				{
+					var response = await client.DeleteAsync(url);
+					return Ok();
+				}
+				else
+				{
+					return BadRequest("Id de tarea no encontrado.");
+				}
+				
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				return BadRequest();
+			}
+
+		}
+
 	}
 }
