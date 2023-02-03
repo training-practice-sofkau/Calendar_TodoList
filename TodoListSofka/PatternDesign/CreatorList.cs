@@ -1,4 +1,4 @@
-﻿using TodoListSofka.DTO;
+﻿using TodoListSofka.DTO.ToDoItem;
 
 namespace TodoListSofka.PatternDesign
 {
@@ -13,11 +13,11 @@ namespace TodoListSofka.PatternDesign
 
         public static CreatorList GetInstance()
         {
-                if (_instance == null)
-                {
-                    _instance = new CreatorList();
-                }
-                return _instance;
+            if (_instance == null)
+            {
+                _instance = new CreatorList();
+            }
+            return _instance;
         }
     }
 }
