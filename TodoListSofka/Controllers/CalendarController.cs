@@ -54,6 +54,8 @@ namespace TodoListSofka.Controllers
             return Ok(calendar);
         }
 
+
+
         //Get por id
         [HttpGet]
         [Route("{id:Guid}")]
@@ -68,6 +70,29 @@ namespace TodoListSofka.Controllers
                 }
 
                 return Ok(item.First());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { code = 500, message = $"No se puede mostrar el calendario: {e.Message}" });
+            }
+        }
+
+        //PUT: actualizar un calendario
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateItem([FromRoute] Guid id, CalendarDTO dto)
+        {
+            try
+            {
+                var item = await _context.Calendars.Where(x => x.Id == id && !x.IsDeleted).ToListAsync();
+                if (!item.IsNullOrEmpty())
+                {
+                    _mapper.Map(dto, item.First());
+                    await _context.SaveChangesAsync();
+                    return Ok(item.First());
+                }
+
+                return BadRequest(new { code = 404, message = "No hay calendarios para actualizar con ese id" });
             }
             catch (Exception e)
             {
