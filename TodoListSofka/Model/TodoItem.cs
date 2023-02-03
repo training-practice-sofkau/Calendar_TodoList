@@ -1,36 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace TodoListSofka.Model
+namespace TodoListSofka.Model;
+
+public partial class Todoitem
 {
-    public class TodoItem
-    {
-        public Guid Id { get; set; }
-        [Required]
-        public string Title { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public string Responsible { get; set; }
-        public bool IsCompleted { get; set; }
+    public Guid Id { get; set; }
 
-        //para el borrado lógico implementar bool o int según su preferencia.
-        //si es int puedo colcocar un rango entre o y 1
-        public bool State { get; set; }
+    [Required] public string Title { get; set; } = null!;
 
-        public TodoItem(Guid id, string title, string description, string responsible, 
-            bool isCompleted, bool state)
-        {
-            Id = id;
-            Title = title;
-            Description = description;
-            Responsible = responsible;
-            IsCompleted = isCompleted;
-            State = state;
-        }
+    [Required] public string Description { get; set; } = null!;
 
-        public TodoItem() { }
+    [Required] public string Responsible { get; set; } = null!;
 
+    [Required] public bool IsCompleted { get; set; } = false;
 
+    [Required] public bool State { get; set; } = true; 
 
-    }
+    [Required] public Guid IdDay { get; set; }
+
+    public virtual Day IdDayNavigation { get; set; } = null!;
 }
